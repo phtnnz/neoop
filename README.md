@@ -41,20 +41,22 @@ Install the required packages (at lot!):
 
 If you want to install from scratch in a new Python venv, the following modules and their dependencies are required:
 
-| Module |
-| ------ |
+| Module | Remarks |
+| ------ | ------- |
 | icecream   |
 | requests   |
 | astropy    |
 | astroquery |
 | astroplan  |
-| matplotlib |
+| matplotlib | needs 3.10 |
 | tzdata     |
 
 ```
-> pip install icecream requests astropy astroquery astroplan matplotlib tzdata
+> pip install icecream requests astropy astroquery astroplan matplotlib<3.11 tzdata
 ```
 
+Please note that matplotlib < 3.11 must be installed, until this issue is fixed in astroplan:
+https://github.com/astropy/astroplan/issues/603
 
 ## NEO Observation Planner
 
