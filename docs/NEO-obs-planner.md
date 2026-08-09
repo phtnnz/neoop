@@ -52,24 +52,24 @@ Version 2.1 / 2026-06-20 / Martin Junius
 
 Retrieve lists and ephemerides for upcoming night
 ```
-neo-obs-planner.py -v --neocp --sbwobs 
+> .\bin\neo-obs-planner.py -v --neocp --sbwobs 
 ```
 ```--neocp``` = get NEOCP objects, ```--sbwobs``` get observable "unusual" NEO objects
 
 Use options ```-CP``` to create CSV plan output and graphic plot
 ```
-neo-obs-planner.py -v --neocp --sbwobs -CP
+> .\bin\neo-obs-planner.py -v --neocp --sbwobs -CP
 ```
 
 Use option ```-M``` to limit magnitude for *both* NEOCP and NEO around full moon phase
 ```
-neo-obs-planner.py -v --neocp --sbwobs -M 19.5
+> .\bin\neo-obs-planner.py -v --neocp --sbwobs -M 19.5
 ```
 
 Output saved to ./neo-obs-data/
 
 
-## N.I.N.A.
+## NINA
 
 ```
 usage: nina-create-sequence2 [-h] [-v] [-d] [-A] [-D DESTINATION_DIR] [-o OUTPUT] [-n] [-l] [-S SETTING] [--date DATE] filename [filename ...]
@@ -100,7 +100,7 @@ Version: 2.0 / 2026-06-16 / Martin Junius
 
 Create sequence:
 ```
-nina-create-sequence2.py -v --setting remote3-neo .\neo-obs-data\YYYYMMDD-neo-obs-plan.csv
+> .\bin\nina-create-sequence2.py -v --setting remote3-neo .\neo-obs-data\YYYYMMDD-neo-obs-plan.csv
 ```
 
 
@@ -176,7 +176,7 @@ Version 0.1 / 2026-06-22 / Martin Junius
 ## Example
 
 ```
-.\neo-obs-planner.py -v --neocp --sbwobs -CP -M 19.5                                        
+> .\bin\neo-obs-planner.py -v --neocp --sbwobs -CP -M 19.5                                        
 neo-obs-planner: download ephemerides from https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi
 neo-obs-planner: download NEOCP list from https://minorplanetcenter.net/iau/NEO/neocp.txt
 neo-obs-planner: download PCCP list from https://minorplanetcenter.net/iau/NEO/pccp.txt
@@ -270,7 +270,7 @@ neo-obs-planner: altitude and sky plot for objects: neo-obs-data\20260624-neo-ob
 ```
 
 ```
-.\nina-create-sequence2.py -v --setting remote3-neo .\neo-obs-data\20260624-neo-obs-plan.csv
+> .\bin\nina-create-sequence2.py -v --setting remote3-neo .\neo-obs-data\20260624-neo-obs-plan.csv
 nina-create-sequence2: processing target template D:/Users/mj/Documents/N.I.N.A/Templates/NINA-Templates-IAS-Common/Target NEO.template.json
 nina-create-sequence2: processing sequence template D:/Users/mj/Documents/N.I.N.A/Templates/NINA-Templates-IAS-Common/Base Remote3 NAUTICAL.json
 nina-create-sequence2: target format (0=target, 1=date, 2=seq, 3=number) {1} {2:03d} {0} (n{3:03d})
@@ -305,7 +305,7 @@ nina-create-sequence2: writing JSON sequence D:\Users\mj\Documents\N.I.N.A\NEO-2
 ```
 
 ```
-.\nina-create-sequence2.py -l --setting remote3-neo .\neo-obs-data\20260624-neo-obs-plan.csv
+> .\bin\nina-create-sequence2.py -l --setting remote3-neo .\neo-obs-data\20260624-neo-obs-plan.csv
 2026-06-24 001 2026 MN (n030)   NEO   18 25 41.80 -02 06 54.0  19.2
 2026-06-24 002 A11E1GK (n030)   NEOCP 18 34 17.50 -61 45 47.0  18.8
 2026-06-24 003 2026 MW1 (n053)  NEO   21 56 52.00 -16 17 32.0  17.1

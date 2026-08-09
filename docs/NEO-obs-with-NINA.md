@@ -16,50 +16,12 @@ Important! N.I.N.A Image file pattern setting: ```_asteroids_$$DATEMINUS12$$\$$T
 
 ## nina-create-sequence2
 
-Target names are created by nina-create-sequence2.py using the "format" setting in nina-create-sequence.json, currently "YYYY-MM-DD NNN OBJECT (nNNN)" (date, sequence #, object name, # of frames).
-
-Create the complete N.I.N.A sequence for the observation night, default date is today (tonight).
-
-```
-nina-create-sequence2.py -v --setting remote3-neo PLAN.csv
-```
-(Use remote2-neo or remote3-neo and the NEO planner neo-obs-planner.py CSV output.)
-
-Example output (NINA templates depend on setting): 
-
-```
-nina-create-sequence2: processing target template [...]
-nina-create-sequence2: processing sequence template [...]
-nina-create-sequence2: target format (0=target, 1=date, 2=seq, 3=number) {1} {2:03d} {0} (n{3:03d})
-nina-create-sequence2: output format (1=date) NEO-{1}.json
-nina-create-sequence2: add target items to container '', empty=target area
-nina-create-sequence2: timezone Africa/Windhoek
-nina-create-sequence2: subdir (1=date) _asteroids_{1}
-nina-create-sequence2: destination directory D:\Users\mj\Documents\N.I.N.A
-nina-create-sequence2: output file NEO-2025-08-25.json
-nina-create-sequence2: NINATarget(process_data): name = Target NEO (Discord)
-nina-create-sequence2: NINASequence(process_data): name = Base NEO NAUTICAL (Discord)
-nina-create-sequence2: processing CSV file D:\Users\mj\OneDrive\Astro-Data\NEO-Planner\M49_cam#3_Revise_2025-08-25-05-02-55.csv
-nina-create-sequence2: ------------------------------------------------------------------
-nina-create-sequence2: #001 2025-08-25 001 3I (n015)         15h45m04.700s -15d11m09.000s
-nina-create-sequence2: UT=2025-08-25 17:37:00+00:00 / local 2025-08-25 19:37:00+02:00
-nina-create-sequence2: 15x60.0s filter=L
-nina-create-sequence2: NINASequence(append_target): name = 2025-08-25 001 3I (n015)
-nina-create-sequence2: ------------------------------------------------------------------
-[...]
-nina-create-sequence2: ------------------------------------------------------------------
-nina-create-sequence2: #016 2025-08-25 016 5GO4M21 (n015)    02h48m46.600s -26d40m55.000s
-nina-create-sequence2: UT=2025-08-26 00:02:00+00:00 / local 2025-08-26 02:02:00+02:00
-nina-create-sequence2: 15x60.0s filter=L
-nina-create-sequence2: NINASequence(append_target): name = 2025-08-25 016 5GO4M21 (n015)
-nina-create-sequence2: writing JSON sequence D:\Users\mj\Documents\N.I.N.A\NEO-2025-08-25.json
-```
-
-The new sequence NEO-2025-08-25.json is then ready to be loaded in N.I.N.A's advanced sequencer.
-As of 2025-08-25, the sequence works with N.I.N.A. 3.2. and the plugins 10 Micron Tools, ASA Tools, Sequencer+, and Groundstation.
+See [NEO-obs-planner.md](NEO-obs-planner.md)
 
 
 ## nina-zip-data
+
+Part of my [IAS astro repository](https://github.com/phtnnz/astro)
 
 nina-zip-data.py runs in parallel with the observation sequence in N.I.N.A, waiting for data to be flagged as ".ready". Compression default is fastest to speed up the archiving. The _YYYY-MM-DD suffix to _asteroids will be added automatically.
 

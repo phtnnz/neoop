@@ -52,14 +52,13 @@ If you want to install from scratch in a new Python venv, the following modules 
 | tzdata     |
 
 ```
-> pip install icecream requests astropy astroquery astroplan matplotlib<3.11 tzdata
+> pip install icecream requests astropy astroquery astroplan "matplotlib<3.11" tzdata
 ```
 
-Please note that matplotlib < 3.11 must be installed, until this issue is fixed in astroplan:
-https://github.com/astropy/astroplan/issues/603
+Please note that matplotlib < 3.11 must be installed, until this issue is fixed in astroplan:  
+https://github.com/astropy/astroplan/issues/603  
+https://github.com/astropy/astroplan/pull/636
 
 ## NEO Observation Planner
 
-t.b.d.
-
-See also docs/
+See [NEO-obs-planner](docs/NEO-obs-planner.md)
