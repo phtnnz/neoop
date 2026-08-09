@@ -49,9 +49,10 @@ If you want to install from scratch in a new Python venv, the following modules 
 | astroquery |
 | astroplan  |
 | matplotlib |
+| tzdata     |
 
 ```
-> pip install icecream requests astropy astroquery astroplan matplotlib
+> pip install icecream requests astropy astroquery astroplan matplotlib tzdata
 ```
 
 
