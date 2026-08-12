@@ -2,17 +2,16 @@
 
 Location: M49, Hakos, Namibia - Bortle 1 skies
 
-Telescope: 12" f/4 Newton
+Tycho "limiting magnitude" is from Image Evaluation Report, it seems that SNR 10 is the threshold.
+
+
+## Telescope: 12" f/4 Newtonian
 
 Camera: QHY 268 M, binning 2x2, L filter  
 High Gain Mode (1), gain 56, offset 10, cooling -5 °C  
 System gain 0.33, read-out noise 3.10 e-, dark current 1.65 e-/pixel/second
 
-Calculation / planning by neocp.py script
-
 Configured base exposure: 240 s for mag 18 object
-
-Tycho "limiting magnitude" is from Image Evaluation Report, it seems that SNR 10 is the threshold.
 
 | Single/s |   N | Moon alt/deg | Moon dist/deg | Limiting mag | Limiting mag stack | LogSNR | Object mag | Object alt |
 | -----:   | --: | ------------: |------------: | -----------: | -----------------: | -----: | ---------: | ---------: |
@@ -47,3 +46,25 @@ Tycho "limiting magnitude" is from Image Evaluation Report, it seems that SNR 10
 | 60 | 30  |    | 60  | 17.4 | 19.6 | 0.94 | 18.7 | 48 |
 | 5  | 30  |    | 60  | 15.9 | 17.5 | 1.01 | 17.0 | 48 |
 | 10 | 73  |    | 73  | 17.5 | 19.1 |      |      | 30 |
+
+
+## Telescope: 10" f/4.5 Newtonian
+
+Camera: QHY 268 M, binning 2x2, L filter  
+High Gain Mode (1), gain 56, offset 30, cooling -10 °C  
+System gain 0.33, read-out noise 3.10 e-, dark current 1.65 e-/pixel/second
+
+| Single exp | Moon dist | Moon alt | Limiting mag | Remarks |
+| ---------: | --------: | -------: | -----------: | ------- |
+| 5          | 152       | -73      | 16.5         |
+| 10         | 162       | -61      | 17.1         |
+| 10         | 138       | -84      | 17.3         |
+| 10         | 163       | -47      | 17.4         |
+| 10         | 169       | -53      | 17.2         |
+| 15         | 158       | -60      | 17.7         |
+| 15         | 167       | -47      | 17.7         |
+| 20         | 141       | -85      | 17.9         |
+| 20         | 147       | -86      | 17.8         |
+| 30         | 143       | -85      | 18.4         |
+| 45         | 150       | -79      | 18.8         |
+| 60         | 149       | -66      | 19.2         |
