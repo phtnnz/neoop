@@ -66,7 +66,7 @@ Use option ```-M``` to limit magnitude for *both* NEOCP and NEO around full moon
 > .\bin\neo-obs-planner.py -v --neocp --sbwobs -M 19.5
 ```
 
-Output saved to ./neo-obs-data/
+Output saved to ./NEOOP-data/
 
 
 ## NINA
@@ -100,7 +100,7 @@ Version: 2.0 / 2026-06-16 / Martin Junius
 
 Create sequence:
 ```
-> .\bin\nina-create-sequence2.py -v --setting remote3-neo .\neo-obs-data\YYYYMMDD-neo-obs-plan.csv
+> .\bin\nina-create-sequence2.py -v --setting remote3-neo .\NEOOP-data\YYYYMMDD-neo-obs-plan.csv
 ```
 
 
