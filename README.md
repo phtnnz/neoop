@@ -1,6 +1,6 @@
-# Astropy-Workbench
+# NEO Observation Planner
 
-Python scripts for NEO / NEOCP / comet observations planning
+Python scripts for NEO / NEOCP / comet observation planning
 
 Copyright 2024-2026 Martin Junius
 
@@ -26,15 +26,19 @@ This is my personal development, not necessarily usable for anyone else. This co
 
 Clone the repository, create an virtual environment, and activate it (Windows command line):
 ```
-> git clone https://github.com/phtnnz/astropy-workbench.git
-> cd astropy-workbench
+> git clone https://github.com/phtnnz/neoop.git
+> cd neoop
 > python -m venv venv
 > .\venv\Scripts\activate.bat
 ```
-
-Install the required packages (at lot!):
+or using PowerShell (automatically handled by VSCode)
 ```
-> pip install -r requirements.txt
+(Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& .\venv\Scripts\Activate.ps1)
+```
+
+Install the package and dependencies:
+```
+> pip install -e .
 ```
 
 ## Installed Modules
@@ -59,6 +63,6 @@ Please note that matplotlib < 3.11 must be installed, until this issue is fixed 
 https://github.com/astropy/astroplan/issues/603  
 https://github.com/astropy/astroplan/pull/636
 
-## NEO Observation Planner
+## Usage
 
 See [NEO-obs-planner](docs/NEO-obs-planner.md)
