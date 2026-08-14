@@ -5,3 +5,43 @@ build-backend = "hatchling.build"
 [project]
 name = "neoop"
 version = "0.1"
+authors = [
+  { name="phtnnz", email="phtnnz@phtn.nz" },
+]
+description = "NEO Observation Planner"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "Apache-2.0"
+license-files = ["LICEN[CS]E*"]
+
+keywords = [
+    "Astronomy",
+    "Minor Planets",
+    "Observation Planning",
+    "MPC",
+]
+
+dependencies = [
+    "icecream",
+    "requests",
+    "astropy",
+    "astroquery",
+    "astroplan",
+    "matplotlib<3.11",
+    "tzdata",
+]
+
+[project.urls]
+Homepage = "https://github.com/phtnnz/neoop"
+Issues = "https://github.com/phtnnz/neoop/issues"
+
+[project.scripts]
+neo-obs-planner = "scripts.neoop:main"
+neo-list-prev = "scripts.neo_list_prev:main"
+neo-sbephem = "scripts.neo_sb_ephem:main"
+neo-sbwobs = "scripts.neo_sb_wobs:main"
+nina-sequence ="scripts.nina_seq:main"
