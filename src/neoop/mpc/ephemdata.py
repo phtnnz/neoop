@@ -39,7 +39,7 @@ import astropy.units as u
 
 # Local modules
 from neoop.utils.verbose import verbose, warning
-from neoop.utils.csvoutput import csv_output
+from neoop.utils.csvoutput import CSVOutput
 from neoop.astro.utils import fmt_time
 from neoop.mpc.ephem import Ephem
 from neoop.neo.local import LocalCircumstances
@@ -138,10 +138,14 @@ class EphemData:
     motion: Quantity = None     # max. motion of object
     ra: Angle = None            # planned RA
     dec: Angle = None           # planned DEC
-    neocp: NEOCPData = None # data from NEOCP list
-    wobs: WObsData = None    # data from JPL SBWOBS service
-    dlx: DLxData = None      # data from MPC DLU/DLN lists
+    neocp: NEOCPData = None     # data from NEOCP list
+    wobs: WObsData = None       # data from JPL SBWOBS service
+    dlx: DLxData = None         # data from MPC DLU/DLN lists
     force: bool = False         # force observation of this object (e.g. from --force option)
+    alt: Angle = None           # planned Alt
+    az: Angle = None            # planned Az
+    moon_dist: Angle = None     # planned Moon distance
+    moon_alt: Angle = None      # planned Moon altitude
 
     def __str__(self) -> str:
         wobs = self.wobs
@@ -315,6 +319,8 @@ class EphemDataList(list):
 
 
     def csv_output(self, output: str) -> None:
+        csv_output = CSVOutput()
+
         # Traverse objects, only those with valid plan_start time
         csv_row = None
         for edata in self:
@@ -347,6 +353,39 @@ class EphemDataList(list):
 
         # Output to CSV file for nina-create-sequence2
         verbose(f"planned objects for nina-create-sequence2: {output}")
+        # csv_row is the last object, if any were found
+        if csv_row:
+            fieldnames = csv_row.keys()
+            ic(fieldnames)
+            csv_output.add_fields(fieldnames)
+            csv_output.write(output, set_locale=False)
+        else:
+            warning("no objects, no CSV output")
+
+
+    def csv_output_exposure(self, output: str) -> None:
+        csv_output = CSVOutput()
+        
+        # Traverse objects, only those with valid plan_start time
+        csv_row = None
+        edata: EphemData
+        for edata in self:
+            obj = edata.obj
+            if edata.times.plan_start:
+                csv_row = { "target": obj,
+                            "obstime": fmt_time(edata.times.plan_start, add_tz=True),
+                            "target alt": float(edata.alt.value),
+                            "exposure": float(edata.exposure.single.value),
+                            "number": edata.exposure.number,
+                            "moon dist": float(edata.moon_dist.value),
+                            "moon alt": float(edata.moon_alt.value),
+                            "limit mag": "MAG1",
+                            "limit mag stack": "MAG2"
+                            }
+                ic(csv_row)
+                csv_output(csv_row)
+
+        verbose(f"exposure data for analysis: {output}")
         # csv_row is the last object, if any were found
         if csv_row:
             fieldnames = csv_row.keys()
