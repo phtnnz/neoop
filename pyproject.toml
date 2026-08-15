@@ -42,6 +42,6 @@ Issues = "https://github.com/phtnnz/neoop/issues"
 [project.scripts]
 neo-obs-planner = "scripts.neo_obs_planner:main"
 neo-list-prev = "scripts.neo_list_prev:main"
-neo-sbephem = "scripts.neo_sb_ephem:main"
-neo-sbwobs = "scripts.neo_sb_wobs:main"
+neo-sbephem = "scripts.neo_sbephem:main"
+neo-sbwobs = "scripts.neo_sbwobs:main"
 nina-create-sequence2 ="scripts.nina_create_sequence2:main"
