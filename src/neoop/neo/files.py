@@ -29,7 +29,7 @@
 
 VERSION     = "1.0 / 2026-06-16"
 AUTHOR      = "Martin Junius"
-NAME        = "neo.files"
+NAME        = "neoop.neo.files"
 DESCRIPTION = "NEO file handling"
 
 import os
@@ -40,8 +40,8 @@ import os
 from astropy.time import Time
 
 # Local modules
-from neo.config import config
-from utils.verbose import warning
+from neoop.neo.config import config
+from neoop.utils.verbose import warning
 
 
 

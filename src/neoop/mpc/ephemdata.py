@@ -20,7 +20,7 @@
 
 VERSION     = "0.1 / 2026-06-30"
 AUTHOR      = "Martin Junius"
-NAME        = "mpc.ephemdata"
+NAME        = "neoop.mpc.ephemdata"
 DESCRIPTION = "MPC ephemeris and observations"
 
 from dataclasses import dataclass
@@ -38,14 +38,14 @@ from astropy.units       import Quantity, Magnitude
 import astropy.units as u
 
 # Local modules
-from utils.verbose import verbose, warning
-from utils.csvoutput import csv_output
-from astro.utils import fmt_time
-from mpc.ephem import Ephem
-from neo.local import LocalCircumstances
-from neo.exposure import Exposure
-from neo.config import config
-from mpc.observations import Obs
+from neoop.utils.verbose import verbose, warning
+from neoop.utils.csvoutput import csv_output
+from neoop.astro.utils import fmt_time
+from neoop.mpc.ephem import Ephem
+from neoop.neo.local import LocalCircumstances
+from neoop.neo.exposure import Exposure
+from neoop.neo.config import config
+from neoop.mpc.observations import Obs
 
 
 

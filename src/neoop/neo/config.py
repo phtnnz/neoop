@@ -25,7 +25,7 @@
 
 VERSION     = "1.0 / 2026-06-16"
 AUTHOR      = "Martin Junius"
-NAME        = "neoconfig"
+NAME        = "neoop.neo.config"
 DESCRIPTION = "Global NEO config module"
 
 # The following libs must be installed with pip
@@ -34,7 +34,7 @@ from icecream import ic
 ic.disable()
 
 # Local modules
-from utils.jsonconfig import JSONConfig, config
+from neoop.utils.jsonconfig import JSONConfig, config
 
 
 

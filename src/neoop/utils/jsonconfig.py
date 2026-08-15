@@ -52,13 +52,13 @@ from icecream import ic
 # Disable debugging
 
 # Local modules
-from utils.verbose import verbose, warning, error
+from neoop.utils.verbose import verbose, warning, error
 
 
 
 VERSION = "1.0 / 2026-06-16"
 AUTHOR  = "Martin Junius"
-NAME    = "jsonconfig"
+NAME    = "neoop.utils.jsonconfig"
 
 
 CONFIG     = ".config"

@@ -23,6 +23,11 @@
 # Version 1.0 / 2026-06-16
 #       Moved and adapted to new directory structure under neoop/
 
+VERSION = "1.0 / 2026-06-16"
+AUTHOR  = "Martin Junius"
+NAME    = "neoop.mpc.location"
+DESCRIPTION = "Handling of geo coordinates"
+
 import re
 import numpy as np
 
@@ -41,12 +46,8 @@ from icecream import ic
 ic.disable()
 
 # Local modules
-from utils.verbose import verbose, warning, error
+from neoop.utils.verbose import verbose, warning, error
 
-
-VERSION = "1.0 / 2026-06-16"
-AUTHOR  = "Martin Junius"
-NAME    = "mpc.location"
 
 
 

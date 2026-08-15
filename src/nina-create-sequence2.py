@@ -92,9 +92,9 @@ from icecream import ic
 ic.disable()
 
 # Local modules
-from utils.verbose    import verbose, warning, error, message
-from utils.jsonconfig import JSONConfig, config
-from astro.radec      import Coord
+from neoop.utils.verbose    import verbose, warning, error, message
+from neoop.utils.jsonconfig import JSONConfig, config
+from neoop.astro.radec      import Coord
 
 
 

@@ -34,11 +34,11 @@ ic.disable()
 import astropy.units as u
 
 # Local modules
-from utils.verbose import verbose, warning, error, message
-from neo.config import config
-from neo.local import LocalCircumstances
-from neo.classes import EphemDataList
-import jpl.sbwobs
+from neoop.utils.verbose import verbose, warning, error, message
+from neoop.neo.config import config
+from neoop.neo.local import LocalCircumstances
+from neoop.neo.classes import EphemDataList
+import neoop.jpl.sbwobs
 
 
 

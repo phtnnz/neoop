@@ -33,7 +33,8 @@
 
 VERSION = "1.1 / 2026-07-11"
 AUTHOR  = "Martin Junius"
-NAME    = "mpc.neocp"
+NAME    = "neoop.mpc.neocp"
+DESCRIPTION = "Retrieve MPC NEOCP data"
 
 import re
 import requests
@@ -50,9 +51,9 @@ from astropy.time import Time
 from astropy.table import QTable
 
 # Local modules
-from utils.verbose import verbose, warning, error
-from neo.config import config
-from neo.classes import EphemData, Ephem, NEOCPData, EphemDataList, LocalCircumstances
+from neoop.utils.verbose import verbose, warning, error
+from neoop.neo.config import config
+from neoop.neo.classes import EphemData, Ephem, NEOCPData, EphemDataList, LocalCircumstances
 
 
 # Requests timeout

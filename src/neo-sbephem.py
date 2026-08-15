@@ -46,9 +46,9 @@ import astropy.units as u
 from astroquery.mpc import MPC
 
 # Local modules
-from utils.verbose    import verbose, warning, error, message
-from neo.config       import config
-from neo.classes      import EphemData, LocalCircumstances, Obs
+from neoop.utils.verbose    import verbose, warning, error, message
+from neoop.neo.config       import config
+from neoop.neo.classes      import EphemData, LocalCircumstances, Obs
 
 
 ##FIXME: use config

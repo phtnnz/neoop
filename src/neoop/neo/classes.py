@@ -34,15 +34,15 @@
 
 VERSION     = "2.0 / 2026-06-30"
 AUTHOR      = "Martin Junius"
-NAME        = "neo.classes"
+NAME        = "neoop.neo.classes"
 DESCRIPTION = "Dataclasses wrapper"
 
 
 
 # One-stop shopping ;-) for all classes
-from neo.local           import LocalCircumstances
-from mpc.observations    import Obs
-from mpc.ephem           import Ephem
-from mpc.ephemdata       import EphemData, EphemDataList, EphemDataDict, EphemTimes, Exposure, NEOCPData, WObsData, DLxData
-from mpc.prevneocp       import PrevNEOCPData
-from neo.exposure        import Exposure
+from neoop.neo.local           import LocalCircumstances
+from neoop.mpc.observations    import Obs
+from neoop.mpc.ephem           import Ephem
+from neoop.mpc.ephemdata       import EphemData, EphemDataList, EphemDataDict, EphemTimes, Exposure, NEOCPData, WObsData, DLxData
+from neoop.mpc.prevneocp       import PrevNEOCPData
+from neoop.neo.exposure        import Exposure

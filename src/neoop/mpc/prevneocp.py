@@ -20,7 +20,7 @@
 
 VERSION     = "0.1 / 2026-06-21"
 AUTHOR      = "Martin Junius"
-NAME        = "mpc.prevneocp"
+NAME        = "neoop.mpc.prevneocp"
 DESCRIPTION = "Retrieve previous NEOCP from MPC"
 
 import re
@@ -35,8 +35,8 @@ ic.disable()
 from astropy.time import Time
 
 # Local modules
-from utils.verbose import verbose, warning, error, message
-from neo.config import config
+from neoop.utils.verbose import verbose, warning, error, message
+from neoop.neo.config import config
 
 
 

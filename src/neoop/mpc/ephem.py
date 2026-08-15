@@ -20,7 +20,7 @@
 
 VERSION     = "0.1 / 2026-06-27"
 AUTHOR      = "Martin Junius"
-NAME        = "mpc.ephem"
+NAME        = "neoop.mpc.ephem"
 DESCRIPTION = "MPC ephemeris and observations"
 
 from dataclasses import dataclass
@@ -41,8 +41,8 @@ import numpy as np
 from astroquery.mpc import MPC
 
 # Local modules
-from astro.utils import is_east, is_west
-from neo.local import LocalCircumstances
+from neoop.astro.utils import is_east, is_west
+from neoop.neo.local import LocalCircumstances
 
 
 

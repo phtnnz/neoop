@@ -29,7 +29,7 @@
 
 VERSION = "1.1 / 2026-07-11"
 AUTHOR  = "Martin Junius"
-NAME    = "neo.plot"
+NAME    = "neoop.neo.plot"
 
 # The following libs must be installed with pip
 from icecream import ic
@@ -46,7 +46,7 @@ from astroplan import Observer
 from astroplan.plots import plot_altitude, plot_sky
 
 # Local modules
-from neo.classes import EphemData, EphemDataList, LocalCircumstances
+from neoop.neo.classes import EphemData, EphemDataList, LocalCircumstances
 
 
 

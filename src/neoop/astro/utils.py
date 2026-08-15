@@ -20,7 +20,7 @@
 
 VERSION     = "0.1 / 2026-07-04"
 AUTHOR      = "Martin Junius"
-NAME        = "astro.utils"
+NAME        = "neoop.astro.utils"
 DESCRIPTION = "Astropy utility functions"
 
 from icecream import ic

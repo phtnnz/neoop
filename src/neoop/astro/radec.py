@@ -26,7 +26,7 @@
 
 VERSION = "1.0 / 2026-06-16"
 AUTHOR  = "Martin Junius"
-NAME    = "astro.radec"
+NAME    = "neoop.astro.radec"
 
 from icecream import ic
 # Disable debugging

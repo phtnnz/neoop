@@ -20,7 +20,7 @@
 
 VERSION     = "0.1 / 2026-06-22"
 AUTHOR      = "Martin Junius"
-NAME        = "mpc.lastobs"
+NAME        = "neoop.mpc.lastobs"
 DESCRIPTION = "Retrieve lists of last observations from MPC"
 
 import requests
@@ -36,9 +36,9 @@ from astropy.time import Time
 import astropy.units as u
 
 # Local modules
-from utils.verbose import verbose, warning, error, message
-from neo.config import config
-from neo.classes import DLxData, EphemData, EphemDataDict
+from neoop.utils.verbose import verbose, warning, error, message
+from neoop.neo.config import config
+from neoop.neo.classes import DLxData, EphemData, EphemDataDict
 
 
 

@@ -20,7 +20,7 @@
 
 VERSION     = "0.1 / 2026-06-25"
 AUTHOR      = "Martin Junius"
-NAME        = "mpc.observations"
+NAME        = "neoop.mpc.observations"
 DESCRIPTION = "Retrieve MPC observations data"
 
 import re

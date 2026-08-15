@@ -20,7 +20,7 @@
 
 VERSION     = "0.1 / 2026-06-27"
 AUTHOR      = "Martin Junius"
-NAME        = "neo.local"
+NAME        = "neoop.neo.local"
 DESCRIPTION = "Location and local circumstances"
 
 import re
@@ -40,7 +40,7 @@ import numpy as np
 from astroplan import Observer
 
 # Local modules
-from mpc.location import get_location
+from neoop.mpc.location import get_location
 
 
 

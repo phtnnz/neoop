@@ -23,7 +23,7 @@
 
 VERSION     = "1.0 / 2026-06-20"
 AUTHOR      = "Martin Junius"
-NAME        = "neo.exposure"
+NAME        = "neoop.neo.exposure"
 DESCRIPTION = "NEO exposure functions"
 
 from dataclasses import dataclass
@@ -38,7 +38,7 @@ import astropy.units as u
 from astropy.units import Quantity, Magnitude
 
 # Local modules
-from neo.config import config
+from neoop.neo.config import config
 
 
 

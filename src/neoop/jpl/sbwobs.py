@@ -42,7 +42,7 @@
 
 VERSION     = "1.3 / 2026-07-11"
 AUTHOR      = "Martin Junius"
-NAME        = "jpl.sbwobs"
+NAME        = "neoop.jpl.sbwobs"
 DESCRIPTION = "Retrieve observable NEOs/comets from JPL"
 
 import requests
@@ -60,11 +60,11 @@ import astropy.units as u
 from astropy.units import Quantity, Magnitude
 
 # Local modules
-from utils.verbose import verbose, warning, error, message
-from neo.config import config
-from astro.utils import fmt_time
-from neo.classes import LocalCircumstances, WObsData, EphemData, EphemDataList, EphemDataDict, Obs
-from mpc.lastobs import mpc_query_customize, mpc_parse_customize, mpc_query_lastobs, mpc_parse_lastobs
+from neoop.utils.verbose import verbose, warning, error, message
+from neoop.neo.config import config
+from neoop.astro.utils import fmt_time
+from neoop.neo.classes import LocalCircumstances, WObsData, EphemData, EphemDataList, EphemDataDict, Obs
+from neoop.mpc.lastobs import mpc_query_customize, mpc_parse_customize, mpc_query_lastobs, mpc_parse_lastobs
 
 
 

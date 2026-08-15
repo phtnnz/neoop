@@ -34,9 +34,9 @@ from icecream import ic
 ic.disable()
 
 # Local modules
-from utils.verbose import verbose, warning, error, message
-from neo.config import config
-from mpc.prevneocp import mpc_query_prev_neocp, mpc_parse_prev_neocp
+from neoop.utils.verbose import verbose, warning, error, message
+from neoop.neo.config import config
+from neoop.mpc.prevneocp import mpc_query_prev_neocp, mpc_parse_prev_neocp
 
 
 

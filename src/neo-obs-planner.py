@@ -57,14 +57,14 @@ import astropy.units as u
 from astroquery.mpc import MPC
 
 # Local modules
-from utils.verbose import verbose, warning, error, message
-from astro.utils   import fmt_time
-from neo.config    import config
-from neo.classes   import EphemData, EphemDataList, LocalCircumstances, Exposure
-import neo.files
-import neo.plot     # provides EphemDataList.plot
-import jpl.sbwobs   # provides EphemDataList.from_sbwobs
-import mpc.neocp    # provides EphemDataList.from_neocp
+from neoop.utils.verbose import verbose, warning, error, message
+from neoop.astro.utils   import fmt_time
+from neoop.neo.config    import config
+from neoop.neo.classes   import EphemData, EphemDataList, LocalCircumstances, Exposure
+import neoop.neo.files   ##FIXME: better approach
+import neoop.neo.plot    # provides EphemDataList.plot
+import neoop.jpl.sbwobs  # provides EphemDataList.from_sbwobs
+import neoop.mpc.neocp   # provides EphemDataList.from_neocp
 
 DEFAULT_LOCATION = config.code
 
@@ -297,7 +297,7 @@ def main():
     arg.add_argument("--pha", action="store_true", help=f"sbwobs: get PHAs")
     arg.add_argument("--comets", action="store_true", help=f"sbwobs: get comets (overrides asteroids options)")
  
-    arg.add_argument("-p", "--prefix", help=f"prefix for planner data, default {neo.files.prefix}")
+    arg.add_argument("-p", "--prefix", help=f"prefix for planner data, default {neoop.neo.files.prefix}")
     arg.add_argument("--force", help=f"skip checks for FORCE objects, include in observation plan")
 
     arg.add_argument("object", nargs="*", help="object name")
@@ -341,7 +341,7 @@ def main():
 
     # Prefix for cached NEOCP data
     if args.prefix:
-        neo.files.set_prefix(args.prefix)
+        neoop.neo.files.set_prefix(args.prefix)
 
     # Forced objects
     forced_objs = list()
@@ -428,20 +428,20 @@ def main():
         # edata_list.verbose_ephem()
 
     verbose("")
-    log_file = neo.files.path("obs-planner-1.log")
+    log_file = neoop.neo.files.path("obs-planner-1.log")
     with verbose.logfile(log_file):
         # NEOCP planner
-        verbose(f"obs-planner-1 {fmt_time(neo.files.now)} {neo.files.now.scale.upper()}")
+        verbose(f"obs-planner-1 {fmt_time(neoop.neo.files.now)} {neoop.neo.files.now.scale.upper()}")
 
         # Run obs planner
         obs_planner_1(edata_list, local)
         if args.csv:
             ##FIXME: output file name depending on mode
-            edata_list.csv_output(args.output or neo.files.path("neo-obs-plan.csv"))
+            edata_list.csv_output(args.output or neoop.neo.files.path("neo-obs-plan.csv"))
 
         # Plot objects and Moon
         if args.plot:
-            plot_file = neo.files.path("neo-obs-plot.png")
+            plot_file = neoop.neo.files.path("neo-obs-plot.png")
             verbose(f"altitude and sky plot for objects: {plot_file}")
             edata_list.plot(plot_file, local)
 
