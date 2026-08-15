@@ -16,13 +16,13 @@
 
 # ChangeLog
 # Version 0.1 / 2026-06-30
-#       Test mpc.ephem, mpc.ephemdata
+#       Test neoop.mpc.ephem, neoop.mpc.ephemdata
 
 from icecream import ic
 
-from mpc.ephem import Ephem
-from mpc.ephemdata import EphemData
-from neo.local import LocalCircumstances
+from neoop.mpc.ephem import Ephem
+from neoop.mpc.ephemdata import EphemData
+from neoop.neo.local import LocalCircumstances
 
 ic.enable()
 obj = "C/2026 L1"
