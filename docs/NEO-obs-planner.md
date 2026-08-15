@@ -250,6 +250,7 @@ neo-obs-planner: ---------------------------------------------------------------
 neo-obs-planner: 2 object(s) planned: ST26H36, P12pb3b
 neo-obs-planner: 3 object(s) skipped: TF26H53, E000011, Roc4012
 neo-obs-planner: planned objects for nina-create-sequence2: NEOOP-data\20260815-neo-obs-plan.csv
+neo-obs-planner: exposure data for analysis: NEOOP-data\20260815-neo-exposure.csv
 neo-obs-planner: altitude and sky plot for objects: NEOOP-data\20260815-neo-obs-plot.png
 ```
 
