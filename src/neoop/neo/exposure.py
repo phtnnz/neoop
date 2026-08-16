@@ -133,11 +133,11 @@ class Exposure:
         base_exp  = config.base_exp
 
         min_n_motion = cls.min_n_exp(exp1, max_motion)             
+        ic(min_n_exp, max_n_exp, min_n_motion)
         if min_n_motion > max_n_exp:
             min_n_motion = max_n_exp
         if min_n_motion > min_n_exp:
             min_n_exp = min_n_motion
-        ic(min_n_exp, max_n_exp, min_n_motion)
 
         rel_brightness = 10 ** (0.4 * (mag.value - base_mag))
         total_exp = base_exp * u.s * rel_brightness         # Total exposure
