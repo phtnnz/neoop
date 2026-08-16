@@ -253,6 +253,8 @@ def obs_planner_1(edata_list: EphemDataList, local: LocalCircumstances) -> None:
         ra, dec = row["RA"].to(u.hourangle), row["DEC"]
         alt, az = row["Alt"], row["Az"]
         edata.ra, edata.dec = ra, dec
+        edata.alt, edata.az = alt, az
+        edata.moon_dist, edata.moon_alt = moon_dist, moon_alt
         objects.append(obj)
 
         message(f"{'':56s}{fmt_time(before)} / {fmt_time(after)}              {moon_dist:3.0f}")
@@ -436,8 +438,8 @@ def main():
         # Run obs planner
         obs_planner_1(edata_list, local)
         if args.csv:
-            ##FIXME: output file name depending on mode
             edata_list.csv_output(args.output or neoop.neo.files.path("neo-obs-plan.csv"))
+            edata_list.csv_output_exposure(neoop.neo.files.path("neo-exposure.csv"))
 
         # Plot objects and Moon
         if args.plot:

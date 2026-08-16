@@ -17,14 +17,16 @@
 # ChangeLog
 # Version 1.0 / 2026-06-20
 #       Exposure functions from utils.py
-#
-# Usage:
-#       from neo.exposure import ...
+# Version 1.1 / 2026-08-16
+#       Bundled in class Exposure, added min_n_exp for slow moving objects
 
-VERSION     = "1.0 / 2026-06-20"
+# Usage:
+#       from neo.exposure import Exposure
+
+VERSION     = "1.1 / 2026-08-16"
 AUTHOR      = "Martin Junius"
 NAME        = "neoop.neo.exposure"
-DESCRIPTION = "NEO exposure functions"
+DESCRIPTION = "NEO exposure calculation"
 
 from dataclasses import dataclass
 from typing import Self
@@ -55,8 +57,8 @@ class Exposure:
         return f"{self.number} x {self.single:2.0f} = {self.total:3.1f} ({self.percentage:.0f}%) / total {self.total_time:3.1f}"
 
 
-    @classmethod
-    def single_exp(cls, motion: Quantity) -> Quantity:
+    @staticmethod
+    def single_exp(motion: Quantity) -> Quantity:
         """
         Compute exposure time depending on motion value,
 
@@ -84,8 +86,8 @@ class Exposure:
         return exp_min * u.s
 
 
-    @classmethod
-    def motion_limit(cls) -> Quantity:
+    @staticmethod
+    def motion_limit() -> Quantity:
         """
         Get motion limit
 
@@ -97,6 +99,13 @@ class Exposure:
         exp_times = config.exposure_times
         return config.pixel_tolerance * config.resolution * u.arcsec / (exp_times[0] * u.s).to(u.min)
 
+
+    @staticmethod
+    def min_n_exp(exp1: Quantity, motion: Quantity) -> int:
+        min_motion = config.resolution * u.arcsec * config.pixel_min_motion
+        min_time = min_motion / motion
+        return int(min_time / exp1)
+    
 
     @classmethod
     def from_motion_mag(cls, max_motion: Quantity, mag: Magnitude) -> Self:
@@ -125,6 +134,13 @@ class Exposure:
         base_mag  = config.base_mag
         base_exp  = config.base_exp
 
+        min_n_motion = cls.min_n_exp(exp1, max_motion)             
+        ic(min_n_exp, max_n_exp, min_n_motion)
+        if min_n_motion > max_n_exp:
+            min_n_motion = max_n_exp
+        if min_n_motion > min_n_exp:
+            min_n_exp = min_n_motion
+
         rel_brightness = 10 ** (0.4 * (mag.value - base_mag))
         total_exp = base_exp * u.s * rel_brightness         # Total exposure
         n_exp = int(total_exp / exp1) + 1                    # Number of exposures
@@ -136,6 +152,7 @@ class Exposure:
         if n_exp > max_n_exp:
             perc_of_required = max_n_exp / n_exp * 100
             n_exp = max_n_exp
+
         total_exp = (n_exp * exp1).to(u.min)
         total_time = ( total_exp 
                     + config.dead_time_slew_center * u.s 

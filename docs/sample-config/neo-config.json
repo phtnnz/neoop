@@ -13,9 +13,11 @@
 
     "neocp_mag_limit":          20.5,
     "sbwobs_mag_limit":         19.5,
-    "pixel_tolerance":          2,
-    "resolution":               1.33,
     "min_alt":                  26,
+
+    "pixel_tolerance":          2,
+    "pixel_min_motion":         6,
+    "resolution":               1.33,
 
     "dead_time_slew_center":    90,
     "dead_time_af":             100,
