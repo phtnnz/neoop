@@ -17,14 +17,16 @@
 # ChangeLog
 # Version 1.0 / 2026-06-20
 #       Exposure functions from utils.py
-#
-# Usage:
-#       from neo.exposure import ...
+# Version 1.1 / 2026-08-16
+#       Bundled in class Exposure, added min_n_exp for slow moving objects
 
-VERSION     = "1.0 / 2026-06-20"
+# Usage:
+#       from neo.exposure import Exposure
+
+VERSION     = "1.1 / 2026-08-16"
 AUTHOR      = "Martin Junius"
 NAME        = "neoop.neo.exposure"
-DESCRIPTION = "NEO exposure functions"
+DESCRIPTION = "NEO exposure calculation"
 
 from dataclasses import dataclass
 from typing import Self
