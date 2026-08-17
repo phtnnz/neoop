@@ -379,6 +379,7 @@ class EphemDataList(list):
                             "number": edata.exposure.number,
                             "moon dist": float(edata.moon_dist.value),
                             "moon alt": float(edata.moon_alt.value),
+                            "telescope": "REMOTE",
                             "limit mag": "MAG1",
                             "limit mag stack": "MAG2"
                             }
