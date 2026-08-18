@@ -414,20 +414,14 @@ def main():
 
     verbose("forced objects:", ", ".join(forced_objs))
     # Set force flag for all in forced_objs
+    edata: EphemData
     for edata in edata_list:
         if edata.obj in forced_objs:
             edata.force = True
 
+    # Output ephemeris
     if args.verbose_ephem:
-        ##FIXME: use process() to implement
-        edata: EphemData
-        for edata in edata_list:
-            if edata.obj in forced_objs:
-                edata.force = True
-            verbose("")
-            verbose.print_lines2(edata.ephem["Targetname", "Obstime", "RA", "DEC", "Mag", 
-                                            "Motion", "PA", "Az", "Alt", "Moon_dist", "Moon_alt"])
-        # edata_list.verbose_ephem()
+        edata_list.verbose_ephem()
 
     verbose("")
     log_file = neoop.neo.files.path("obs-planner-1.log")

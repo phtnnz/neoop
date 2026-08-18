@@ -283,10 +283,9 @@ class EphemDataList(list):
     def verbose_ephem(self) -> None:
         for edata in self:
             if edata.ephem:
-                verbose("===================================================================================================================")
-                verbose(f"{edata.obj} ephemeris")
-                verbose.print_lines2(edata.ephem)
-        verbose("===================================================================================================================")
+                verbose("")
+                verbose.print_lines(edata.ephem["Targetname", "Obstime", "RA", "DEC", "Mag", 
+                                                "Motion", "PA", "Az", "Alt", "Moon_dist", "Moon_alt"])
 
     def process(self, func: Callable, *args, **kwargs) -> Self:
         for edata in self:
