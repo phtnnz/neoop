@@ -59,4 +59,6 @@ mag = Magnitude(19)
 motion = 0.13 * u.arcsec/u.min
 ic(mag, motion)
 exp = Exposure.from_motion_mag(motion, mag)
-print("Test6:", exp, "\n")
+print("Test6:", exp)
+ic(exp.delay_start(), exp.delay_mid(), exp.track_len(motion))
+print("\n")
