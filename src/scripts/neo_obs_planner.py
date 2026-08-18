@@ -38,11 +38,13 @@
 #       New option --verbose-ephem for ephemerides output, fixed mag limits
 # Version 2.2 / 2026-07-04
 #       Added output of Moon altitude
+# Version 2.3 / 2026-08-18
+#       Use mid track exposure time, added to output
 
-VERSION     = "2.2 / 2026-07-04"
+VERSION     = "2.3 / 2026-08-18"
 AUTHOR      = "Martin Junius"
 NAME        = "neo-obs-planner"
-DESCRIPTION = "NEOCP/NEO observation planner"
+DESCRIPTION = "NEOCP/NEO/comet observation planner"
 
 import sys
 import argparse
