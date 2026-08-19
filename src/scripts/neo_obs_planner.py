@@ -424,15 +424,15 @@ def main():
         if edata.obj in forced_objs:
             edata.force = True
 
-    # Output ephemeris
-    if args.verbose_ephem:
-        edata_list.verbose_ephem()
-
     verbose("")
     log_file = neoop.neo.files.path("obs-planner-1.log")
     with verbose.logfile(log_file):
         # NEOCP planner
         verbose(f"obs-planner-1 {fmt_time(neoop.neo.files.now)} {neoop.neo.files.now.scale.upper()}")
+
+        # Output ephemeris
+        if args.verbose_ephem:
+            edata_list.verbose_ephem()
 
         # Run obs planner
         obs_planner_1(edata_list, local)
