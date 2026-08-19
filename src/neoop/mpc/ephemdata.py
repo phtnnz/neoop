@@ -17,11 +17,13 @@
 # ChangeLog
 # Version 0.1 / 2026-06-30
 #       EphemData and related data structures handling
+# Version 0.2 / 2026-08-19
+#       Added EphemDataList.from_single_neocp() class method
 
-VERSION     = "0.1 / 2026-06-30"
+VERSION     = "0.2 / 2026-08-19"
 AUTHOR      = "Martin Junius"
 NAME        = "neoop.mpc.ephemdata"
-DESCRIPTION = "MPC ephemeris and observations"
+DESCRIPTION = "MPC ephemeris and lists"
 
 from dataclasses import dataclass
 from typing import Self
