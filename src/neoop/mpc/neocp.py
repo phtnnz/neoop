@@ -75,7 +75,7 @@ TIMEOUT = config.requests_timeout
 # Example request for M49
 # W=a&mb=-30&mf=20.5&dl=-90&du=%2B40&nl=75&nu=100&sort=d&Parallax=1&obscode=M49&long=&lat=&alt=&int=1&start=0&raty=a&mot=m&dmot=p&out=f&sun=n&oalt=26
 
-def mpc_query_neocp_ephemerides(url: str, local: LocalCircumstances) -> str:
+def mpc_query_neocp_ephemerides_all(url: str, local: LocalCircumstances) -> str:
     loc = local.loc
     code = local.code
     ic(url, code)
@@ -103,6 +103,54 @@ def mpc_query_neocp_ephemerides(url: str, local: LocalCircumstances) -> str:
         "alt":	"",
         "int":	"1",            # interval 0=1h, 1=30m, 2=10m, 3=1m
         "start":"1",            # start now + X hours
+        "raty":	"a",            # format: h=trunc. sexagesimal, a=full, d=decimal
+        "mot":	"m",            # motion: s="/sec, m="/min, h="/hr, d=degree/day
+        "dmot":	"p",            # motion: p=total, r=separate RA/DEC coord. mo tion, s=separate RA/DEC sky motion
+        "out":	"f",            # f=full output, b=brief output
+        "sun":	"n",            # suppress output: x=never, s=sunset/rise, c=civil, n=nautical, a=astronomical
+        "oalt":	min_alt         # suppress below min altitude
+    }
+
+    ic(url, data)
+    # For some reason GET works, but POST doesn't?
+    response = requests.get(url, params=data, timeout=TIMEOUT)
+    ic(response.status_code)
+    if response.status_code != 200:
+        error(f"query to {url} failed")
+
+    return response.text
+
+
+
+def mpc_query_neocp_ephemerides_obj(url: str, local: LocalCircumstances, obj: str, hours: int) -> str:
+    loc = local.loc
+    code = local.code
+    ic(url, code)
+
+    # Compute min/max DEC from min altitude and latitude
+    mag_limit = config.neocp_mag_limit
+    min_alt   = config.min_alt
+    min_dec, max_dec = local.get_dec_limits(min_alt * u.deg)
+    ic(min_dec, max_dec)
+    min_dec, max_dec = int(min_dec.value), int(max_dec.value)
+
+    data = { 
+        "W":	"j",            # selected object
+        "obj":  obj,            # NEOCP object temp desig
+        "mb":	"-30",          # max brightness (V)
+        "mf":	mag_limit,      # min brightness (V)
+        "dl":	min_dec,        # min DEC
+        "du":	max_dec,        # max DEC
+        "nl":	"0",            # min NEO score
+        "nu":	"100",          # max NEO score
+        "sort":	"d",
+        "Parallax":	"1",        # 0=geocentric, 1=code, 2=Lon/Lat/Alt
+        "obscode": code,        # observatory code
+        "long":	"",
+        "lat":	"",
+        "alt":	"",
+        "int":	"2",            # interval 0=1h, 1=30m, 2=10m, 3=1m
+        "start": hours,          # start now + X hours
         "raty":	"a",            # format: h=trunc. sexagesimal, a=full, d=decimal
         "mot":	"m",            # motion: s="/sec, m="/min, h="/hr, d=degree/day
         "dmot":	"p",            # motion: p=total, r=separate RA/DEC coord. mo tion, s=separate RA/DEC sky motion
@@ -377,7 +425,7 @@ def edata_list_from_neocp(cls, local: LocalCircumstances) -> EphemDataList:
         List of EphemData objects
     """
     verbose(f"download ephemerides from {config.url_neocp_query}")
-    content_ephem = mpc_query_neocp_ephemerides(config.url_neocp_query, local)
+    content_ephem = mpc_query_neocp_ephemerides_all(config.url_neocp_query, local)
     ephemerides_txt = parse_neocp_ephemerides(content_ephem)
     edata_list = edata_list_from_text_ephemerides(ephemerides_txt, local)
 
@@ -396,3 +444,28 @@ def edata_list_from_neocp(cls, local: LocalCircumstances) -> EphemDataList:
 
 # Dynamically add/replace class method
 EphemDataList.from_neocp = edata_list_from_neocp
+
+
+
+@classmethod
+def edata_list_from_single_neocp(cls, local: LocalCircumstances, obj: str, hours: int) -> EphemDataList:
+    verbose(f"download ephemerides from {config.url_neocp_query}")
+    content_ephem = mpc_query_neocp_ephemerides_obj(config.url_neocp_query, local, obj, hours)
+    ephemerides_txt = parse_neocp_ephemerides(content_ephem)
+    edata_list = edata_list_from_text_ephemerides(ephemerides_txt, local)
+
+    verbose(f"download NEOCP list from {config.url_neocp_list}")
+    content_neocp = mpc_query_neocp_list(config.url_neocp_list)
+    neocp_list = parse_neocp_list(content_neocp)
+    edata_list_add_neocp_list(edata_list, neocp_list)
+
+    verbose(f"download PCCP list from {config.url_pccp_list}")
+    content_pccp  = mpc_query_neocp_list(config.url_pccp_list)
+    pccp_list = parse_neocp_list(content_pccp)
+    edata_list_add_neocp_list(edata_list, pccp_list, is_pccp=True)
+
+    verbose(f"NEOCP objects ({edata_list.len()}): {edata_list.objects_str()}")
+    return edata_list
+
+# Dynamically add/replace class method
+EphemDataList.from_single_neocp = edata_list_from_single_neocp
