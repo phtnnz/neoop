@@ -448,21 +448,22 @@ EphemDataList.from_neocp = edata_list_from_neocp
 
 
 @classmethod
-def edata_list_from_single_neocp(cls, local: LocalCircumstances, obj: str, hours: int) -> EphemDataList:
+def edata_list_from_single_neocp(cls, local: LocalCircumstances, obj: str, hours: int, add_list: bool=False) -> EphemDataList:
     verbose(f"download ephemerides from {config.url_neocp_query}")
     content_ephem = mpc_query_neocp_ephemerides_obj(config.url_neocp_query, local, obj, hours)
     ephemerides_txt = parse_neocp_ephemerides(content_ephem)
     edata_list = edata_list_from_text_ephemerides(ephemerides_txt, local)
 
-    verbose(f"download NEOCP list from {config.url_neocp_list}")
-    content_neocp = mpc_query_neocp_list(config.url_neocp_list)
-    neocp_list = parse_neocp_list(content_neocp)
-    edata_list_add_neocp_list(edata_list, neocp_list)
+    if add_list:
+        verbose(f"download NEOCP list from {config.url_neocp_list}")
+        content_neocp = mpc_query_neocp_list(config.url_neocp_list)
+        neocp_list = parse_neocp_list(content_neocp)
+        edata_list_add_neocp_list(edata_list, neocp_list)
 
-    verbose(f"download PCCP list from {config.url_pccp_list}")
-    content_pccp  = mpc_query_neocp_list(config.url_pccp_list)
-    pccp_list = parse_neocp_list(content_pccp)
-    edata_list_add_neocp_list(edata_list, pccp_list, is_pccp=True)
+        verbose(f"download PCCP list from {config.url_pccp_list}")
+        content_pccp  = mpc_query_neocp_list(config.url_pccp_list)
+        pccp_list = parse_neocp_list(content_pccp)
+        edata_list_add_neocp_list(edata_list, pccp_list, is_pccp=True)
 
     verbose(f"NEOCP objects ({edata_list.len()}): {edata_list.objects_str()}")
     return edata_list
