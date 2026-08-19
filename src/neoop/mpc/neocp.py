@@ -27,13 +27,15 @@
 #       Moved and adapted to new directory structure under neoop/
 # Version 1.2 / 2026-07-11
 #       Provides from_neocp class method for EphemDataList
+# Version 1.3 / 2026-08-19
+#       Added query for single NEOCP object and from_single_neocp class method for EphemDataList
 
 # Usage
-#       import mpc.neocp
+#       import neoop.mpc.neocp
 
-VERSION = "1.1 / 2026-07-11"
-AUTHOR  = "Martin Junius"
-NAME    = "neoop.mpc.neocp"
+VERSION     = "1.3 / 2026-08-19"
+AUTHOR      = "Martin Junius"
+NAME        = "neoop.mpc.neocp"
 DESCRIPTION = "Retrieve MPC NEOCP data"
 
 import re
