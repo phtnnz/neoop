@@ -407,3 +407,7 @@ class EphemDataList(list):
     @classmethod
     def from_neocp(cls, local: LocalCircumstances) -> Self:
         ... # provided by import mpc.neocp
+
+    @classmethod
+    def from_single_neocp(cls, local: LocalCircumstances, obj: str, hours: int) -> Self:
+        ... # provided by import mpc.neocp
