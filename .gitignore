@@ -1,0 +1,6 @@
+.config/
+.vscode/
+__pycache__/
+tmp/
+venv/
+NEOOP-data*/
