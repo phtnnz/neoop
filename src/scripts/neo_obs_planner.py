@@ -78,7 +78,7 @@ def obs_planner_1(edata_list: EphemDataList, local: LocalCircumstances) -> None:
     objects = list()
     skipped = list()
 
-    message("----------------------------------------------------------------------------------------------------------------------")
+    message("======================================================================================================================")
     message("                 Score       Mag #Obs      Arc NotSeen  Time start ephemeris/ end ephemeris                 Max motion")
     message("          /Uncertainty                                  Time before         / after meridian             Moon distance")
     message("                                                        Time start exposure / end exposure                    Moon alt")
