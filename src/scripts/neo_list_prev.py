@@ -19,8 +19,10 @@
 #       Query previous NEOCP objects
 # Version 0.2 / 2026-06-23
 #       Added -f --file option to read from plan CSV file
+# Version 0.3 / 2026-08-21
+#       Search also for designation
 
-VERSION     = "0.2 / 2026-06-23"
+VERSION     = "0.3 / 2026-08-21"
 AUTHOR      = "Martin Junius"
 NAME        = "neo-list-prev"
 DESCRIPTION = "Query previous NEOCP list from MPC"
@@ -92,16 +94,19 @@ def main():
     if args.object:
         objects.extend(args.object)
 
-    if objects:    
+    if objects:
+        objs_trksub = { obj.trk_sub: obj for obj in prev_objects }
+        objs_design = { obj.designation: obj for obj in prev_objects }
         for obj in objects:
-            if obj in prev_objects:
-                ic(prev_objects[obj])
-                message(prev_objects[obj])
+            if obj in objs_trksub:
+                message(objs_trksub[obj])
+            elif obj in objs_design:
+                message(objs_design[obj])
             else:
                 message(f"{obj:7s}   not in previous NEOCP list")
     else:
-        for obj in sorted(prev_objects.keys()):
-            message(prev_objects[obj])
+        for obj in sorted(prev_objects, key=lambda obj: obj.trk_sub.lower()):
+            message(obj)
 
 
 
