@@ -38,11 +38,13 @@
 #       New option --verbose-ephem for ephemerides output, fixed mag limits
 # Version 2.2 / 2026-07-04
 #       Added output of Moon altitude
+# Version 2.3 / 2026-08-18
+#       Use mid track exposure time, added to output
 
-VERSION     = "2.2 / 2026-07-04"
+VERSION     = "2.3 / 2026-08-18"
 AUTHOR      = "Martin Junius"
 NAME        = "neo-obs-planner"
-DESCRIPTION = "NEOCP/NEO observation planner"
+DESCRIPTION = "NEOCP/NEO/comet observation planner"
 
 import sys
 import argparse
@@ -76,10 +78,11 @@ def obs_planner_1(edata_list: EphemDataList, local: LocalCircumstances) -> None:
     objects = list()
     skipped = list()
 
-    message("----------------------------------------------------------------------------------------------------------------------")
+    message("======================================================================================================================")
     message("                 Score       Mag #Obs      Arc NotSeen  Time start ephemeris/ end ephemeris                 Max motion")
     message("          /Uncertainty                                  Time before         / after meridian             Moon distance")
     message("                                                        Time start exposure / end exposure                    Moon alt")
+    message("                                                        Time mid exposure                                             ")
     message("                                                        # x Exp = total exposure time")
     message("                                                        RA, DEC, Alt, Az")
 
@@ -199,7 +202,8 @@ def obs_planner_1(edata_list: EphemDataList, local: LocalCircumstances) -> None:
             continue
 
         # Ephemeris row best matching start time
-        row = eph.get_row_for_time(exp_start)
+        exp_mid_time = exp_start + edata.exposure.delay_mid()
+        row = eph.get_row_for_time(exp_mid_time)
         ic(row)
         moon_dist = row["Moon_dist"]
         moon_alt = row["Moon_alt"]
@@ -259,6 +263,7 @@ def obs_planner_1(edata_list: EphemDataList, local: LocalCircumstances) -> None:
 
         message(f"{'':56s}{fmt_time(before)} / {fmt_time(after)}              {moon_dist:3.0f}")
         message(f"{'':56s}{fmt_time(exp_start)} / {fmt_time(exp_end)}              {moon_alt:3.0f}")
+        message(f"{'':56s}{fmt_time(exp_mid_time)}")
         message(f"{'':56s}{edata.exposure}")
         message(f"{'':56s}RA {ra:.4f}, DEC {dec:.4f}, Alt {alt:.0f}, Az {az:.0f}")
 
@@ -414,26 +419,20 @@ def main():
 
     verbose("forced objects:", ", ".join(forced_objs))
     # Set force flag for all in forced_objs
+    edata: EphemData
     for edata in edata_list:
         if edata.obj in forced_objs:
             edata.force = True
-
-    if args.verbose_ephem:
-        ##FIXME: use process() to implement
-        edata: EphemData
-        for edata in edata_list:
-            if edata.obj in forced_objs:
-                edata.force = True
-            verbose("")
-            verbose.print_lines2(edata.ephem["Targetname", "Obstime", "RA", "DEC", "Mag", 
-                                            "Motion", "PA", "Az", "Alt", "Moon_dist", "Moon_alt"])
-        # edata_list.verbose_ephem()
 
     verbose("")
     log_file = neoop.neo.files.path("obs-planner-1.log")
     with verbose.logfile(log_file):
         # NEOCP planner
         verbose(f"obs-planner-1 {fmt_time(neoop.neo.files.now)} {neoop.neo.files.now.scale.upper()}")
+
+        # Output ephemeris
+        if args.verbose_ephem:
+            edata_list.verbose_ephem()
 
         # Run obs planner
         obs_planner_1(edata_list, local)

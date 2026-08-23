@@ -163,3 +163,18 @@ class Exposure:
         ic(n_exp, exp1, total_exp, total_time, perc_of_required)
 
         return cls(n_exp, exp1, total_exp, total_time, perc_of_required)
+
+
+    def delay_start(self) -> Quantity:
+        return (config.dead_time_slew_center +
+                config.dead_time_af +
+                config.dead_time_guiding) * u.s
+
+
+    def delay_mid(self) -> Quantity:
+        return (self.delay_start() + self.number / 2 * (self.single + config.dead_time_image*u.s))
+
+
+    def track_len(self, motion: Quantity) -> Quantity:
+        return motion * (self.number * (self.single + config.dead_time_image * u.s)).to(u.min)
+    

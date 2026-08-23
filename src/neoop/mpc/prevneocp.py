@@ -75,8 +75,8 @@ def mpc_query_prev_neocp(url: str) -> str:
 
 
 
-def mpc_parse_prev_neocp(content: str) -> dict[str, PrevNEOCPData]:
-    objects = dict()
+def mpc_parse_prev_neocp(content: str) -> list[PrevNEOCPData]:
+    objects = list()
 
     in_prev = False
     for line in content.splitlines():
@@ -105,7 +105,7 @@ def mpc_parse_prev_neocp(content: str) -> dict[str, PrevNEOCPData]:
                     mpec_url = config.mpc_url + m1.group(1)
                     mpec_no  = m1.group(2)
             ic(trk_sub, prov_id, date, mpec_no, mpec_url)
-            objects[trk_sub] = PrevNEOCPData(trk_sub, prov_id, None, date, mpec_no, mpec_url)
+            objects.append(PrevNEOCPData(trk_sub, prov_id, None, date, mpec_no, mpec_url))
             continue
 
         # <li> CE74892 was not confirmed (Feb. 21.55 UT)
@@ -114,7 +114,7 @@ def mpc_parse_prev_neocp(content: str) -> dict[str, PrevNEOCPData]:
         if m:
             trk_sub, comment, date = m.groups()
             ic(trk_sub, comment, date)
-            objects[trk_sub] = PrevNEOCPData(trk_sub, None, comment, date)
+            objects.append(PrevNEOCPData(trk_sub, None, comment, date))
             continue
             
         if not m:

@@ -180,7 +180,11 @@ class Ephem:
     def get_row_for_time(self, t: Time, col_obstime: str="Obstime") -> Row:
         for r1, r2 in pairwise(self.table):
             if r1[col_obstime] <= t and t <= r2[col_obstime]:
-                return r1
+                # Return row which is closest to exposure time
+                if t - r1[col_obstime] < r2[col_obstime] - t:
+                    return r1
+                else:
+                    return r2
         
         # No matching interval found
         return None

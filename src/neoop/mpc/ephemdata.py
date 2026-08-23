@@ -17,11 +17,13 @@
 # ChangeLog
 # Version 0.1 / 2026-06-30
 #       EphemData and related data structures handling
+# Version 0.2 / 2026-08-19
+#       Added EphemDataList.from_single_neocp() class method
 
-VERSION     = "0.1 / 2026-06-30"
+VERSION     = "0.2 / 2026-08-19"
 AUTHOR      = "Martin Junius"
 NAME        = "neoop.mpc.ephemdata"
-DESCRIPTION = "MPC ephemeris and observations"
+DESCRIPTION = "MPC ephemeris and lists"
 
 from dataclasses import dataclass
 from typing import Self
@@ -283,10 +285,9 @@ class EphemDataList(list):
     def verbose_ephem(self) -> None:
         for edata in self:
             if edata.ephem:
-                verbose("===================================================================================================================")
-                verbose(f"{edata.obj} ephemeris")
-                verbose.print_lines2(edata.ephem)
-        verbose("===================================================================================================================")
+                verbose("")
+                verbose.print_lines(edata.ephem["Targetname", "Obstime", "RA", "DEC", "Mag", 
+                                                "Motion", "PA", "Az", "Alt", "Moon_dist", "Moon_alt"])
 
     def process(self, func: Callable, *args, **kwargs) -> Self:
         for edata in self:
@@ -407,4 +408,8 @@ class EphemDataList(list):
 
     @classmethod
     def from_neocp(cls, local: LocalCircumstances) -> Self:
+        ... # provided by import mpc.neocp
+
+    @classmethod
+    def from_single_neocp(cls, local: LocalCircumstances, obj: str, hours: int, add_list: bool=False) -> Self:
         ... # provided by import mpc.neocp
