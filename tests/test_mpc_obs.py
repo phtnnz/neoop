@@ -35,3 +35,4 @@ ic(obs)
 
 obs = Obs.from_object(obj, mpcformat=True)
 ic(obs)
+obs.write_mpcformat("tmp/data.mpc80")
