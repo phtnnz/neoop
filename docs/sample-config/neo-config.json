@@ -30,11 +30,11 @@
     
     "min_n_obs":                4,
     "max_notseen":              4,
-    "opt_alt":                  50,
+    "opt_alt":                  45,
     "min_n_exp":                30,
     "max_n_exp":                250,
     "min_perc_required":        45,
-    "min_moon_dist":            50,
+    "min_moon_dist":            40,
     "min_arc":                  0.05,
 
     "##2": "Config for JPL What's Observable? (sbwobs)",
@@ -60,6 +60,16 @@
 
     "##4": "Config for Previous NEO Confirmation Page Objects",
     "prev_neocp_url":   "https://www.minorplanetcenter.net/iau/NEO/ToConfirm_PrevDes.html",
-    "mpc_url":          "https://www.minorplanetcenter.net"
+    "mpc_url":          "https://www.minorplanetcenter.net",
 
+    "##5": "Config for NEOCP observations",
+    "neocp_obs_url":    "https://cgi.minorplanetcenter.net/cgi-bin/showobsorbs.cgi",
+    
+    "##6": "Config for find_orb related stuff",
+    "find_orb_dir":     "find_orb",
+    "fo_exe":           "fo64.exe",
+    "fo_mpc80":         "data.mpc80",
+    "fo_json":          "ephemeri.json",
+
+    "##END": ""
 }
