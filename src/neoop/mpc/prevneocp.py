@@ -96,7 +96,7 @@ def mpc_parse_prev_neocp(content: str) -> list[PrevNEOCPData]:
         m = re.match(r'<li>\s*(.+?)\s+=\s+(\w+?)\s+\((.+?)\)\s*(\[.+\])?$', line)
         if m:
             prov_id, trk_sub, date, mpec = m.groups()
-            prov_id = prov_id.replace("<sub>", "").replace("</sub>", "")
+            prov_id = prov_id.replace("<sub>", "").replace("</sub>", "").replace("Comet ", "")
             mpec_url = None
             mpec_no  = None
             if mpec:
