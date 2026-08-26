@@ -108,3 +108,12 @@ class Obs:
             time = Time(jd, format="jd")
             time.format = "iso"
             return time
+
+
+    def write_mpcformat(self, filename: str) -> None:
+        ic(self.table.columns)
+        if not "obs" in self.table.columns:
+            raise IndexError("table not in mpc80 format (single 'obs' column)")
+        with open(filename, "w") as file:
+            for line in self.table["obs"]:
+                print(line, file=file)
