@@ -36,11 +36,18 @@ API:
 https://cgi.minorplanetcenter.net/cgi-bin/customize.cgi 
 
 
-### NEO Confirmation Page
+### NEOCP Objects
 https://www.minorplanetcenter.net/iau/NEO/toconfirm_tabular.html
 
 API:
 https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi
+
+
+### NEOCP Observations
+https://cgi.minorplanetcenter.net/cgi-bin/showobsorbs.cgi
+
+Example:
+https://cgi.minorplanetcenter.net/cgi-bin/showobsorbs.cgi?Obj=ST26H93&obs=y
 
 
 ### Previous NEO Confirmation Page Objects
