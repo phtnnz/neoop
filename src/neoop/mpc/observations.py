@@ -69,8 +69,8 @@ class Obs:
         return None
 
 
-    def get_observations(self, obj: str) -> Self:
-        table = MPC.get_observations(obj)
+    def get_observations(self, obj: str, mpcformat: bool=False) -> Self:
+        table = MPC.get_observations(obj, get_mpcformat=mpcformat)
         # table["Targetname"] = obj
         # # table is already a QTable
         # self.table = QTable(table, meta={**table.meta})
@@ -80,9 +80,9 @@ class Obs:
 
 
     @classmethod
-    def from_object(cls, obj: str) -> Self:
+    def from_object(cls, obj: str, mpcformat: bool=False) -> Self:
         obs = cls()
-        obs.get_observations(obj)
+        obs.get_observations(obj, mpcformat)
         return obs
     
 
