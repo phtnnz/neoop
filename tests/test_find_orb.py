@@ -35,3 +35,5 @@ obs = Obs.from_object(obj, mpcformat=True)
 ic(obs)
 
 fo = FindOrb.from_obs(local, obj, obs)
+txt = fo.read_ephem_txt()
+ic(txt)
