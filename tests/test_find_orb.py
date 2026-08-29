@@ -31,5 +31,9 @@ obj = "2026 NT2"
 local = LocalCircumstances.from_location("M49")
 ic(local)
 
+obs = Obs.from_object(obj, mpcformat=True)
+ic(obs)
+
 fo = FindOrb()
-ic(fo)
+fo.write_obs(obs)
+fo.run_find_orb(local)
