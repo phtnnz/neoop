@@ -50,7 +50,7 @@ from neoop.utils.verbose import verbose, error
 
 
 class FindOrb:
-    def __init__(self) -> None:
+    def __init__(self, local: LocalCircumstances) -> None:
         # Check and find find_orb dir
         find_orb_dir = config.find_orb_dir
         if not os.path.isdir(find_orb_dir):
@@ -63,6 +63,7 @@ class FindOrb:
         self._fo_json = os.path.join(self._fo_dir, config.fo_json)
         self._fo_txt = os.path.join(self._fo_dir, config.fo_txt)
         self._fo_debug = os.path.join(self._fo_dir, config.fo_debug)
+        self.local = local
         ic(self._fo_dir, self._fo_exe, self._fo_mpc80, self._fo_json)        
 
 
@@ -70,11 +71,11 @@ class FindOrb:
         obs.write_mpcformat(self._fo_mpc80)
 
 
-    def run_find_orb(self, local: LocalCircumstances) -> None:
+    def run_find_orb(self) -> None:
         # For compatibility with sbpy.data.Ephem
-        start = local.epochs.get("start")
-        step  = local.epochs.get("step")
-        stop  = local.epochs.get("stop")
+        start = self.local.epochs.get("start")
+        step  = self.local.epochs.get("step")
+        stop  = self.local.epochs.get("stop")
         if stop:
             number = int((stop - start) / step) + 1
         else:
@@ -83,7 +84,7 @@ class FindOrb:
 
         # Example command line
         # .\fo64 DATAFILE  -C M49  -e ephem.txt  -E 3,5,10,27,28,29,35,36  "EPHEM_START=2026 Aug 24 22:00" EPHEM_STEPS=12 EPHEM_STEP_SIZE=5m
-        args = [self._fo_exe, self._fo_mpc80, "-C", local.code, "-e", self._fo_txt, *config.fo_args,
+        args = [self._fo_exe, self._fo_mpc80, "-C", self.local.code, "-e", self._fo_txt, *config.fo_args,
                 f"EPHEM_START={start.iso}", f"EPHEM_STEPS={number}", f"EPHEM_STEP_SIZE={int(step.to(u.min).value)}m"
                 ]
         ic(args)
@@ -94,7 +95,7 @@ class FindOrb:
             error(f"running fo failed: {e}, see {self._fo_debug}")
 
 
-    def read_ephem(self, target: str) -> QTable:
+    def read_ephem(self, target: str, nautical: bool=True) -> QTable:
         with open(self._fo_json, 'r') as file:
             data = json.load(file)
             eph = data.get("ephemeris")
@@ -132,6 +133,12 @@ class FindOrb:
                 #   "SNR": 0.00, "ExpT": null, "OptExpT": 4.3, "mag": 17.642, "motion_rate": 2.587680, "motionPA": 213.7115, 
                 #   "alt": 5.0700, "az": 140.8945, "Mal": -40.1759, "Maz": 111.5655 },
                 time   = Time(entry["ISO_time"])
+
+                # Skip ephemeris outside nautical dusk ... dawn
+                if nautical:
+                    if time < self.local.naut_dusk or time > self.local.naut_dawn:
+                        continue
+
                 ra     = Angle(entry["RA"], unit=u.deg)
                 dec    = Angle(entry["Dec"], unit=u.deg)
                 # sky    = Magnitude(entry["SkyBr"], unit=u.mag) if entry["SkyBr"] else Magnitude(0, unit=u.mag)
@@ -169,9 +176,9 @@ class FindOrb:
     
 
     @classmethod
-    def from_obs(cls, local: LocalCircumstances, target: str, obs: Obs) -> Self:
-        fo = cls()
+    def from_obs(cls, local: LocalCircumstances, target: str, obs: Obs, nautical: bool=True) -> Self:
+        fo = cls(local)
         fo.write_obs(obs)
-        fo.run_find_orb(local)
-        fo.read_ephem(target)
+        fo.run_find_orb()
+        fo.read_ephem(target, nautical)
         return fo
