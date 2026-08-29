@@ -26,6 +26,7 @@ DESCRIPTION = "Compute ephemeris using Project Pluto's find_orb"
 from typing import Self
 import os
 import subprocess
+import json
 
 from icecream import ic
 # Disable debugging
@@ -34,6 +35,11 @@ ic.disable()
 # AstroPy
 from astropy.table import QTable
 import astropy.units as u
+from astropy.time import Time
+from astropy.coordinates import Angle, AltAz
+import astropy.units as u
+from astropy.units import Quantity, Magnitude
+import numpy as np
 
 # NEOOP
 from neoop.neo.config import config
@@ -88,7 +94,78 @@ class FindOrb:
             error(f"running fo failed: {e}, see {self._fo_debug}")
 
 
-    def read_ephem(self) -> QTable:
-        ...
+    def read_ephem(self, target: str) -> QTable:
+        with open(self._fo_json, 'r') as file:
+            data = json.load(file)
+            eph = data.get("ephemeris")
+            if not eph:
+                error(f"missing 'ephemeris' key in {self._fo_json}")
+            n_steps = eph.get("n_steps")
+            entries = eph.get("entries")
 
+            qt = QTable()
+            qt["Targetname"]  = target
+            qt["Obstime"]     = Time("2000-01-01 00:00")
+            qt["RA"]          = 0 * u.hourangle
+            qt["DEC"]         = 0 * u.degree
+            # qt["Sky"]         = 0 * u.mag
+            # qt["SNR"]         = 0.0
+            # qt["Exp_time"]    = 0 * u.s
+            qt["Mag"]         = 0 * u.mag
+            qt["Motion"]      = 0 * u.arcsec / u.min
+            qt["PA"]          = 0 * u.degree
+            qt["Alt"]         = 0 * u.degree
+            qt["Az"]          = 0 * u.degree
+            qt["Moon_alt"]    = 0 * u.degree
+            qt["Moon_az"]     = 0 * u.degree
+            qt["Moon_dist"]   = 0 * u.degree
 
+            for idx in range(0, n_steps):
+                key = str(idx)
+                entry = entries.get(key)
+                ic(entry)
+
+                # Example entry:
+                # { "JD": 2461282.125000001, "ISO_time": "2026-08-29T15:00:00Z", "RA": 328.36496886613, 
+                #   "RA60": "21 53 27.593", "Dec": -48.29541971139, "Dec60": "-48 17 43.51",
+                #   "delta": 0.140281546550, "r": 1.121276583889, "elong": 140.25456, "SkyBr": 3.49, "RGB": "e2ffff", 
+                #   "SNR": 0.00, "ExpT": null, "OptExpT": 4.3, "mag": 17.642, "motion_rate": 2.587680, "motionPA": 213.7115, 
+                #   "alt": 5.0700, "az": 140.8945, "Mal": -40.1759, "Maz": 111.5655 },
+                time   = Time(entry["ISO_time"])
+                ra     = Angle(entry["RA"], unit=u.deg)
+                dec    = Angle(entry["Dec"], unit=u.deg)
+                # sky    = Magnitude(entry["SkyBr"], unit=u.mag) if entry["SkyBr"] else Magnitude(0, unit=u.mag)
+                # snr    = float(entry["SNR"]) if entry["SNR"] else 0.0
+                # exp    = Quantity(entry["OptExpT"], unit=u.s) 
+                mag    = Magnitude(entry["mag"], unit=u.mag)
+                motion = Quantity(entry["motion_rate"], unit=u.arcsec / u.min)
+                pa     = Angle(entry["motionPA"], unit=u.deg)
+                alt    = Angle(entry["alt"], unit=u.deg)
+                az     = Angle(entry["az"], unit=u.deg)
+                m_alt  = Angle(entry["Mal"], unit=u.deg)
+                m_az   = Angle(entry["Maz"], unit=u.deg)
+
+                altaz = AltAz(alt=alt, az=az)
+                m_altaz = AltAz(alt=m_alt, az=m_az)
+                m_dist = altaz.separation(m_altaz)
+                ic(altaz, m_altaz, m_dist)
+
+                # Alternatively, use the spherical law of cosines
+                # cos_d = np.sin(alt)*np.sin(m_alt) + np.cos(alt)*np.cos(m_alt)*np.cos(az - m_az)
+                # m_dist = np.acos(cos_d)
+
+                # qt.add_row( [target, time, ra, dec, sky, snr, exp, mag, motion, pa, alt, az, m_alt, m_az, m_dist ] )
+                qt.add_row( [target, time, ra, dec, mag, motion, pa, alt, az, m_alt, m_az, m_dist ] )
+
+            ic(qt)
+            self.table = qt
+            return qt
+        
+
+    @classmethod
+    def from_obs(cls, local: LocalCircumstances, target: str, obs: Obs) -> Self:
+        fo = cls()
+        fo.write_obs(obs)
+        fo.run_find_orb(local)
+        fo.read_ephem(target)
+        return fo
