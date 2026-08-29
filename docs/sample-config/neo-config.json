@@ -65,11 +65,14 @@
     "##5": "Config for NEOCP observations",
     "neocp_obs_url":    "https://cgi.minorplanetcenter.net/cgi-bin/showobsorbs.cgi",
     
-    "##6": "Config for find_orb related stuff",
+    "##6": "Config for find_orb related stuff, see find_orb.md",
     "find_orb_dir":     "find_orb",
     "fo_exe":           "fo64.exe",
     "fo_mpc80":         "data.mpc80",
     "fo_json":          "ephemeri.json",
+    "fo_txt":           "ephem.txt",
+    "fo_debug":         "debug.txt",
+    "fo_args":          [ "-E", "3,5,10,27,28,29,35,36" ],
 
     "##END": ""
 }
