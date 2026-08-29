@@ -34,6 +34,4 @@ ic(local)
 obs = Obs.from_object(obj, mpcformat=True)
 ic(obs)
 
-fo = FindOrb()
-fo.write_obs(obs)
-fo.run_find_orb(local)
+fo = FindOrb.from_obs(local, obj, obs)
