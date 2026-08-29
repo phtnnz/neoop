@@ -160,7 +160,13 @@ class FindOrb:
             ic(qt)
             self.table = qt
             return qt
-        
+
+
+    def read_ephem_txt(self) -> str:
+        with open(self._fo_txt, "r") as file:
+            self.text = file.read()
+        return self.text
+    
 
     @classmethod
     def from_obs(cls, local: LocalCircumstances, target: str, obs: Obs) -> Self:
