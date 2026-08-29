@@ -25,15 +25,21 @@ DESCRIPTION = "Compute ephemeris using Project Pluto's find_orb"
 
 from typing import Self
 import os
+import subprocess
 
 from icecream import ic
 # Disable debugging
 ic.disable()
 
 # AstroPy
+from astropy.table import QTable
+import astropy.units as u
 
 # NEOOP
 from neoop.neo.config import config
+from neoop.mpc.observations import Obs
+from neoop.neo.local import LocalCircumstances
+from neoop.utils.verbose import verbose, error
 
 
 
@@ -49,5 +55,40 @@ class FindOrb:
             raise FileNotFoundError(f"file {self._fo_exe} not found")
         self._fo_mpc80 = os.path.join(self._fo_dir, config.fo_mpc80)
         self._fo_json = os.path.join(self._fo_dir, config.fo_json)
+        self._fo_txt = os.path.join(self._fo_dir, config.fo_txt)
+        self._fo_debug = os.path.join(self._fo_dir, config.fo_debug)
         ic(self._fo_dir, self._fo_exe, self._fo_mpc80, self._fo_json)        
+
+
+    def write_obs(self, obs: Obs) -> None:
+        obs.write_mpcformat(self._fo_mpc80)
+
+
+    def run_find_orb(self, local: LocalCircumstances) -> None:
+        # For compatibility with sbpy.data.Ephem
+        start = local.epochs.get("start")
+        step  = local.epochs.get("step")
+        stop  = local.epochs.get("stop")
+        if stop:
+            number = int((stop - start) / step) + 1
+        else:
+            number = 10
+        ic(start, step, stop, number)
+
+        # Example command line
+        # .\fo64 DATAFILE  -C M49  -e ephem.txt  -E 3,5,10,27,28,29,35,36  "EPHEM_START=2026 Aug 24 22:00" EPHEM_STEPS=12 EPHEM_STEP_SIZE=5m
+        args = [self._fo_exe, self._fo_mpc80, "-C", local.code, "-e", self._fo_txt, *config.fo_args,
+                f"EPHEM_START={start.iso}", f"EPHEM_STEPS={number}", f"EPHEM_STEP_SIZE={int(step.to(u.min).value)}m"
+                ]
+        ic(args)
+        verbose("run", " ".join(args))
+        try:
+            subprocess.run(args=args, shell=False, cwd=self._fo_dir, check=True)
+        except subprocess.CalledProcessError as e:
+            error(f"running fo failed: {e}, see {self._fo_debug}")
+
+
+    def read_ephem(self) -> QTable:
+        ...
+
 
