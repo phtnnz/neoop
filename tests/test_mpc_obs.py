@@ -36,3 +36,8 @@ ic(obs)
 obs = Obs.from_object(obj, mpcformat=True)
 ic(obs)
 obs.write_mpcformat("tmp/data.mpc80")
+
+##Changeme: use a current NEOCP object
+neocp = "ZTF10Fc"
+obs = Obs.from_object(neocp, neocp=True, mpcformat=True)
+ic(obs)
