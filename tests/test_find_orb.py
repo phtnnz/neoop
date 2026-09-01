@@ -20,6 +20,8 @@
 
 from icecream import ic
 
+from astropy.time import Time
+
 from neoop.mpc.observations import Obs
 from neoop.neo.local import LocalCircumstances
 from neoop.pyfo.pyfo import FindOrb
@@ -37,3 +39,5 @@ ic(obs)
 fo = FindOrb.from_obs(local, obj, obs)
 txt = fo.read_ephem_txt()
 ic(txt)
+
+fo2 = FindOrb.from_obs(local, obj, obs, nautical=False, start=Time("2026-09-02 00:00:00"))

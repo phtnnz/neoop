@@ -71,15 +71,21 @@ class FindOrb:
         obs.write_mpcformat(self._fo_mpc80)
 
 
-    def run_find_orb(self) -> None:
-        # For compatibility with sbpy.data.Ephem
-        start = self.local.epochs.get("start")
-        step  = self.local.epochs.get("step")
-        stop  = self.local.epochs.get("stop")
-        if stop:
-            number = int((stop - start) / step) + 1
+    def run_find_orb(self, start: Time=None) -> None:
+        if start:
+            # Single ephem
+            step = 10 *u.min
+            stop = None
+            number = 1
         else:
-            number = 10
+            # For compatibility with sbpy.data.Ephem
+            start = self.local.epochs.get("start")
+            step  = self.local.epochs.get("step")
+            stop  = self.local.epochs.get("stop")
+            if stop:
+                number = int((stop - start) / step) + 1
+            else:
+                number = 10
         ic(start, step, stop, number)
 
         # Example command line
@@ -176,9 +182,9 @@ class FindOrb:
     
 
     @classmethod
-    def from_obs(cls, local: LocalCircumstances, target: str, obs: Obs, nautical: bool=True) -> Self:
+    def from_obs(cls, local: LocalCircumstances, target: str, obs: Obs, nautical: bool=True, start: Time=None) -> Self:
         fo = cls(local)
         fo.write_obs(obs)
-        fo.run_find_orb()
+        fo.run_find_orb(start)
         fo.read_ephem(target, nautical)
         return fo
