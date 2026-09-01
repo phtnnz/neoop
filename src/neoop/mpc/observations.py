@@ -17,8 +17,10 @@
 # ChangeLog
 # Version 0.1 / 2026-06-25
 #       Get observations from MPC database
+# Version 0.2 / 2026-09-01
+#       Also get NEOCP observations from MPC
 
-VERSION     = "0.1 / 2026-06-25"
+VERSION     = "0.2 / 2026-09-01"
 AUTHOR      = "Martin Junius"
 NAME        = "neoop.mpc.observations"
 DESCRIPTION = "Retrieve MPC observations data"
@@ -53,36 +55,9 @@ TIMEOUT = config.requests_timeout
 class Obs:
     table: QTable = None
 
-    def _rename_columns_mpc(self) -> None:
-        self.table.rename_columns(("Date",    "Dec",      "V",             "Proper motion", "Direction", 
-                                   "Azimuth", "Altitude", "Moon distance", "Moon altitude" ),
-                                  # -->
-                                  ("Obstime", "DEC",      "Mag",           "Motion",        "PA",        
-                                   "Az",      "Alt",      "Moon_dist",     "Moon_alt"      ))
-
-
-    def _id_type_from_name(name: str) -> str:
-        id_type_regex = {   "asteroid number":        r'^[1-9][0-9]*$',
-                            "asteroid designation":   r'^\d{4}[ _][A-Z]{1,2}\d{0,3}$',
-                            "comet number":           r'^[0-9]{1,3}[PIA]$',
-                            "comet designation":      r'^[PDCXAI]\/\d{4}[ _][A-Z]{1,2}\d{0,3}$'
-                        }
-
-        for id, regex in id_type_regex.items():
-            m = re.match(regex, name)
-            if m:
-                ic(name, id)
-                return id
-        ## Default None or "asteroid designation"?
-        return None
-
-
     def get_observations(self, obj: str, mpcformat: bool=False) -> None:
         table = MPC.get_observations(obj, get_mpcformat=mpcformat)
-        # table["Targetname"] = obj
-        # # table is already a QTable
-        # self.table = QTable(table, meta={**table.meta})
-        # self._rename_columns_mpc()
+        # table is already a QTable
         self.table = table
 
 
