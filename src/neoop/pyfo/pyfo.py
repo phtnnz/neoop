@@ -74,7 +74,7 @@ class FindOrb:
     def run_find_orb(self, start: Time=None) -> None:
         if start:
             # Single ephem
-            step = 10 *u.min
+            step = 1 *u.min
             stop = None
             number = 1
         else:
@@ -94,7 +94,7 @@ class FindOrb:
                 f"EPHEM_START={start.iso}", f"EPHEM_STEPS={number}", f"EPHEM_STEP_SIZE={int(step.to(u.min).value)}m"
                 ]
         ic(args)
-        verbose("run", " ".join(args))
+        # verbose("run", " ".join(args))
         try:
             subprocess.run(args=args, shell=False, cwd=self._fo_dir, check=True)
         except subprocess.CalledProcessError as e:
