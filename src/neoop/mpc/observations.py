@@ -64,7 +64,7 @@ class Obs:
     def get_observations_neocp(self, obj: str, mpcformat: bool=False) -> None:
         if not mpcformat:
             raise NotImplementedError("mpcformat=True not implemented for NEOCP observations")
-        verbose(f"query {config.neocp_obs_url}")
+        # verbose(f"query {config.neocp_obs_url}")
         content = mpc_query_neocp_obs(config.neocp_obs_url, obj)
         table = parse_neocp_obs(content)
         self.table = table
