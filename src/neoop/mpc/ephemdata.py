@@ -382,7 +382,8 @@ class EphemDataList(list):
                             "moon alt": float(edata.moon_alt.value),
                             "telescope": "REMOTE",
                             "limit mag": "MAG1",
-                            "limit mag stack": "MAG2"
+                            "limit mag stack": "MAG2",
+                            "measured mag": "MAG3"
                             }
                 ic(csv_row)
                 csv_output(csv_row)
