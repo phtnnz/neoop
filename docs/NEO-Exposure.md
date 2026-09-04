@@ -78,3 +78,12 @@ System gain 0.33, read-out noise 3.10 e-, dark current 1.65 e-/pixel/second
 | 60         | 149       | -66      | 19.2         |
 | 60         | 140       | -33      | 19.3         |
 | 60         | 141       | -68      | 19.2         |
+
+
+## Limiting Magnitude Overview
+
+From Tycho Tracker's "Image Evaluation Report", SNR = 10, LogSNR = 1
+
+| Moon alt      | Exposure time | Limiting mag 10" | Limiting mag 12" |
+| ------------- | ------------- | ---------------- | ---------------- |
+| below horizon | 2             | 15.5 - 15.6      | 16.1             |
