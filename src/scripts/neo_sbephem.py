@@ -27,8 +27,11 @@
 #       Moved and adapted to new directory structure under neoop/
 # Version 0.5 / 2026-06-25
 #       Added --lastobs option
+# Version 0.6 / 2026-09-04
+#       Added --find-orb option using find_orb to compute ephemeris, 
+#       object type can be specified with :NEOCP, :PCCP, :NEO, :COMET
 
-VERSION     = "0.5 / 2026-06-25"
+VERSION     = "0.6 / 2026-09-04"
 AUTHOR      = "Martin Junius"
 NAME        = "neo-sbephem"
 DESCRIPTION = "Ephemeris for solar system objects"
@@ -51,7 +54,6 @@ from neoop.neo.config       import config
 from neoop.neo.classes      import EphemData, LocalCircumstances, Obs
 
 
-##FIXME: use config
 DEFAULT_LOCATION = config.code
 
 
@@ -71,7 +73,8 @@ def main():
     arg.add_argument("--obs", action="store_true", help="output MPC obs")
     arg.add_argument("--lastobs", action="store_true", help="output MPC obs last row")
     arg.add_argument("--clear", action="store_true", help="clear MPC cache")
-    arg.add_argument("object", nargs="*", help="object name")
+    arg.add_argument("--find-orb", action="store_true", help="use find_orb to compute ephemerides")
+    arg.add_argument("object", nargs="*", help="object name, optionally OBJECT:TYPE (NEOCP|PCCP|NEO|COMET)")
 
     args = arg.parse_args()
 
@@ -94,22 +97,20 @@ def main():
     # Observer location and local circumstances
     local = LocalCircumstances.from_location(args.location if args.location else DEFAULT_LOCATION, time)
 
-    # Override config DEC limits
-    min_dec, max_dec = local.get_dec_limits(config.min_alt*u.deg)
-    config.min_dec = int(min_dec.degree)
-    config.max_dec = int(max_dec.degree)
-
     if not args.allnight:
         local.epochs = {"start":  time,
                         "step":   5 * u.min,
                         "stop":   time + 1 * u.hour
                         }
-        ##FIXME: better solution?
         local.naut_dusk = time
         local.naut_dawn = time + 1 * u.hour
+        local.no_naut = True
     ic(local.epochs)
     verbose.print_lines(local)
-    verbose("listing ephemeris for altitude>0 and after nautical dusk/before nautical dawn only!")
+    if args.allnight:
+        verbose("listing ephemeris for altitude>0 and after nautical dusk/before nautical dawn only!")
+    else:
+        verbose("listing ephemeris for altitude>0!")
 
     # Objects
     objects = []
@@ -128,10 +129,21 @@ def main():
         MPC.clear_cache()    
 
     for obj in objects:
-        edata = EphemData("-", obj)
+        if ":" in obj:
+            obj, type = obj.split(":")
+            type = type.upper()
+        else:
+            type = "-"
+        ic(obj, type)
+        edata = EphemData(type, obj)
 
-        # Get ephemerides
-        edata.add_ephem_mpc(local)
+        if args.find_orb:
+        # Get ephemeris from find:orb
+            edata.add_ephem_find_orb(local)
+        else:
+        # Get ephemeris from MPC
+            edata.add_ephem_mpc(local)
+
         edata.add_exposure()
         ic(edata)
 
