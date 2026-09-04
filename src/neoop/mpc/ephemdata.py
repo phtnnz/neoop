@@ -19,8 +19,10 @@
 #       EphemData and related data structures handling
 # Version 0.2 / 2026-08-19
 #       Added EphemDataList.from_single_neocp() class method
+# Version 0.3 / 2026-09-04
+#       Added add_ephem_find_orb() methods
 
-VERSION     = "0.2 / 2026-08-19"
+VERSION     = "0.3 / 2026-09-04"
 AUTHOR      = "Martin Junius"
 NAME        = "neoop.mpc.ephemdata"
 DESCRIPTION = "MPC ephemeris and lists"
