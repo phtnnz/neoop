@@ -48,6 +48,7 @@ from neoop.neo.local import LocalCircumstances
 from neoop.neo.exposure import Exposure
 from neoop.neo.config import config
 from neoop.mpc.observations import Obs
+from neoop.pyfo.pyfo import FindOrb
 
 
 
@@ -184,7 +185,7 @@ class EphemData:
         return self
 
 
-    def add_ephem_mpc(self, local: LocalCircumstances) -> Self:
+    def add_ephem_mpc(self, local: LocalCircumstances) -> None:
         if self.ephem:
             verbose(f"already got ephemeris for {self.obj}")
             return
@@ -210,7 +211,35 @@ class EphemData:
         self.mag = mag
         self.motion = motion
 
-        return self
+
+    def add_ephem_find_orb(self, local: LocalCircumstances) -> None:
+        if self.ephem:
+            verbose(f"already got ephemeris for {self.obj}")
+            return
+
+        min_alt = config.min_alt
+
+        obj = self.obj
+        verbose(f"{obj} ephemeris from find_orb")
+        fo = FindOrb.from_object(local, obj, neocp=self.type=="NEOCP" or self.type=="PCCP")
+        eph = Ephem.from_table(fo.table)
+
+        mask = (eph["Alt"] > min_alt * u.deg) & (eph["Obstime"] >= local.naut_dusk) & (eph["Obstime"] <= local.naut_dawn)
+        eph1 = Ephem(eph[mask])
+        if len(eph1) == 0:
+            warning(f"skipping empty ephemeris for {obj}")
+            return
+        mag = eph1.get_mag0()
+        motion = eph1.get_max_motion()
+
+        # Copy to EphemData
+        if self.wobs:
+            self.type = self.wobs.type.upper()
+        self.obj = obj
+        self.ephem = eph1
+        self.mag = mag
+        self.motion = motion
+
 
 
     def add_exposure(self) -> Self:
