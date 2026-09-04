@@ -154,9 +154,10 @@ def main():
 
         is_neocp = type=="NEOCP" or type=="PCCP"
         if is_neocp:
-            warning("--obs and --lastobs not implemented for NEOCP/PCCP")
+            if args.obs or args.lastobs:
+                warning("--obs and --lastobs not implemented for NEOCP/PCCP")
             continue
-        
+
         if args.obs:
             obs = Obs.from_object(obj)
             verbose.print_lines2(obs)
