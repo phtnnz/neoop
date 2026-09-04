@@ -54,13 +54,18 @@ class LocalCircumstances:
     epochs: dict                # epochs parameter for Ephem.from_mpc()/from_jpb()
     code: str = None            # MPC station code
     midnight: Time = None       # midnight
+    no_naut: bool = False       # no str() output for nautical twilight, naut_dusk/dawn is start/stop
+
 
     def _loc_to_string(self) -> str:
         return f"lon={self.loc.to_geodetic().lon.to_string(unit=u.degree, precision=1)} lat={self.loc.to_geodetic().lat.to_string(unit=u.degree, precision=1)} height={self.loc.to_geodetic().height.to_string(precision=0)}"
 
 
     def __str__(self) -> str:
-        return f"location {self._loc_to_string()} code {self.code if self.code else "---"}\nnautical twilight {self.naut_dusk.iso} / {self.naut_dawn.iso} ({self.naut_dusk.scale.upper()})"
+        if self.no_naut:
+            return f"location {self._loc_to_string()} code {self.code if self.code else "---"}"
+        else:
+            return f"location {self._loc_to_string()} code {self.code if self.code else "---"}\nnautical twilight {self.naut_dusk.iso} / {self.naut_dawn.iso} ({self.naut_dusk.scale.upper()})"
 
 
     @classmethod
@@ -99,9 +104,9 @@ class LocalCircumstances:
         midnight1 = Time(jd1, format="jd")
         ic(day, rem, midnight1.iso)
         epochs = {"start":  midnight1 - 8 * u.hour,
-                "step":   30 * u.min,
-                "stop":   midnight1 + 9 * u.hour
-                }
+                  "step":   30 * u.min,
+                  "stop":   midnight1 + 9 * u.hour
+                 }
         ic(epochs)
 
         return cls(loc, observer, twilight_evening, twilight_morning, epochs, code, midnight1)
