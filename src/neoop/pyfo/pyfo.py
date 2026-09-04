@@ -188,3 +188,10 @@ class FindOrb:
         fo.run_find_orb(start)
         fo.read_ephem(target, nautical)
         return fo
+
+    @classmethod
+    def from_object(cls, local: LocalCircumstances, target: str, neocp: bool=False, nautical: bool=True, start: Time=None) -> Self:
+        obs = Obs.from_object(target, mpcformat=True, neocp=neocp)
+        return cls.from_obs(local, target, obs)
+
+
