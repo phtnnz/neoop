@@ -56,7 +56,11 @@ class Obs:
     table: QTable = None
 
     def get_observations(self, obj: str, mpcformat: bool=False) -> None:
-        table = MPC.get_observations(obj, get_mpcformat=mpcformat)
+        try:
+            table = MPC.get_observations(obj, get_mpcformat=mpcformat)
+        except ValueError:
+            error(f"retrieving MPC observations for {obj}, use {obj}:NEOCP?")
+
         # table is already a QTable
         self.table = table
 
