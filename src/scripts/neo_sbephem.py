@@ -152,10 +152,14 @@ def main():
                                             "Motion", "PA", "Az", "Alt", "Moon_dist", "Moon_alt"])
             verbose("NEO exposure", edata.exposure)
 
+        is_neocp = type=="NEOCP" or type=="PCCP"
+        if is_neocp:
+            warning("--obs and --lastobs not implemented for NEOCP/PCCP")
+            continue
+        
         if args.obs:
             obs = Obs.from_object(obj)
             verbose.print_lines2(obs)
-        
         if args.lastobs:
             obs = Obs.from_object(obj)
             last_obs = obs.get_last_obs()
