@@ -331,6 +331,13 @@ class EphemDataList(list):
         return self
 
 
+    def add_ephem_find_orb(self, local: LocalCircumstances) -> Self:
+        edata: EphemData
+        for edata in self:
+            edata.add_ephem_find_orb(local)
+        return self
+
+
     def add_ephem_times(self, col_obstime: str="Obstime", col_alt: str="Alt", col_az: str="Az", use_old_sort: bool=False) -> Self:
         edata: EphemData
         for edata in self:
