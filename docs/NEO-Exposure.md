@@ -87,3 +87,7 @@ From Tycho Tracker's "Image Evaluation Report", SNR = 10, LogSNR = 1
 | Moon alt      | Exposure time | Limiting mag 10" | Limiting mag 12" |
 | ------------- | ------------- | ---------------- | ---------------- |
 | below horizon | 2             | 15.5 - 15.6      | 16.1             |
+| "             | 5             | 16.4 - 16.6      | 17.0 - 17.3      |
+| "             | 10            | 17.1 - 17.4      | 18.0             |
+| "             | 15            | 17.3 - 17.7      | 18.5             |
+| "             | 20            | 17.8 - 18.1      |                  |
