@@ -63,6 +63,12 @@ Please note that matplotlib < 3.11 must be installed, until this issue is fixed 
 https://github.com/astropy/astroplan/issues/603  
 https://github.com/astropy/astroplan/pull/636
 
+
+## Find_orb
+
+This package supports find_orb for computing ephemerides. Run the script ```.\get_find_orb.bat``` (Windows) to install a local copy of find_orb and required files in ```./find_orb/```.
+
+
 ## Usage
 
 See [NEO-obs-planner](docs/NEO-obs-planner.md)
