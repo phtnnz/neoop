@@ -63,6 +63,6 @@ From Tycho Tracker's "Image Evaluation Report", SNR = 10, LogSNR = 1
 | "             | 45            | 18.8 - 18.9      |                  |
 | "             | 60            | 19.2 - 19.4      | 19.8 - 20.0      |
 |               | Regression    | 2.5 * LOG10(exposure) |             |
-|               | Base 1 s      | 14.8             | approx. + 0.6    |
+|               | Base 1 s      | 14.6 - 14.8      | approx. + 0.6    |
 
 ![Limiting mag for 10" - Remote2](Limit-Mag-10.png)
