@@ -19,11 +19,14 @@
 #       Exposure functions from utils.py
 # Version 1.1 / 2026-08-16
 #       Bundled in class Exposure, added min_n_exp for slow moving objects
+# Version 1.2 / 2026-09-08
+#       New exposure calculation based on config.limit_mag_1s, added
+#       limit_mag and limit_mag_stack attributes
 
 # Usage:
 #       from neo.exposure import Exposure
 
-VERSION     = "1.1 / 2026-08-16"
+VERSION     = "1.2 / 2026-09-08"
 AUTHOR      = "Martin Junius"
 NAME        = "neoop.neo.exposure"
 DESCRIPTION = "NEO exposure calculation"
