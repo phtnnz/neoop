@@ -27,6 +27,9 @@
 
     "base_exp":                 240,
     "base_mag":                 18,
+
+    "##1a":                     "limiting mag (SNR=1) for 1s exposure (Remote2)",
+    "limit_mag_1s":             14.6,
     
     "min_n_obs":                4,
     "max_notseen":              4,

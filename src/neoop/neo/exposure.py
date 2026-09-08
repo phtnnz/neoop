@@ -38,6 +38,7 @@ ic.disable()
 # AstroPy & friends
 import astropy.units as u
 from astropy.units import Quantity, Magnitude
+import numpy as np
 
 # Local modules
 from neoop.neo.config import config
@@ -52,9 +53,11 @@ class Exposure:
     total: Quantity             # total net exposure time
     total_time: Quantity        # total gross exposure time incl. overhead
     percentage: float           # percentage of required total exposure time
+    limit_mag: Magnitude        # limiting mag for single exposure
+    limit_mag_stack: Magnitude  # limiting mag for single exposure
 
     def __str__(self):
-        return f"{self.number} x {self.single:2.0f} = {self.total:3.1f} ({self.percentage:.0f}%) / total {self.total_time:3.1f}"
+        return f"{self.number} x {self.single:.0f} = {self.total:3.1f} ({self.percentage:.0f}%) / total {self.total_time:3.1f}, limit mag={self.limit_mag_stack:.1f}"
 
 
     @staticmethod
@@ -131,8 +134,8 @@ class Exposure:
 
         min_n_exp = config.min_n_exp
         max_n_exp = config.max_n_exp
-        base_mag  = config.base_mag
-        base_exp  = config.base_exp
+        # base_mag  = config.base_mag
+        # base_exp  = config.base_exp
 
         min_n_motion = cls.min_n_exp(exp1, max_motion)             
         ic(min_n_exp, max_n_exp, min_n_motion)
@@ -141,10 +144,19 @@ class Exposure:
         if min_n_motion > min_n_exp:
             min_n_exp = min_n_motion
 
-        rel_brightness = 10 ** (0.4 * (mag.value - base_mag))
-        total_exp = base_exp * u.s * rel_brightness         # Total exposure
-        n_exp = int(total_exp / exp1) + 1                    # Number of exposures
-        ic(base_mag, base_exp, mag.value, rel_brightness, total_exp, n_exp)
+        # # Old calculation
+        # rel_brightness = 10 ** (0.4 * (mag.value - base_mag))
+        # total_exp = base_exp * u.s * rel_brightness         # Total exposure
+        # n_exp = int(total_exp / exp1) + 1                    # Number of exposures
+        # ic(base_mag, base_exp, mag.value, rel_brightness, total_exp, n_exp)
+
+        # NEW calculation based on limiting mag of single exposure
+        limit_mag_1s = Magnitude(config.limit_mag_1s)
+        limit_mag = Magnitude(limit_mag_1s.value + 10**0.4 * np.log10(exp1.value))
+        n_exp = int(10 ** (0.8 * (mag.value - limit_mag.value))) + 1
+        total_exp = n_exp * exp1
+        ic(limit_mag_1s, mag.value, exp1, limit_mag, total_exp, n_exp)
+
         perc_of_required = 100.                             # Percentage actual / total exposure
         if n_exp < min_n_exp:
             perc_of_required = min_n_exp / n_exp * 100
@@ -153,6 +165,7 @@ class Exposure:
             perc_of_required = max_n_exp / n_exp * 100
             n_exp = max_n_exp
 
+        limit_mag_stack = Magnitude(np.log10(n_exp) / 0.8 + limit_mag.value)
         total_exp = (n_exp * exp1).to(u.min)
         total_time = ( total_exp 
                     + config.dead_time_slew_center * u.s 
@@ -160,9 +173,9 @@ class Exposure:
                     + config.dead_time_guiding * u.s  
                     + config.safety_margin * u.s
                     + n_exp * config.dead_time_image * u.s )
-        ic(n_exp, exp1, total_exp, total_time, perc_of_required)
+        ic(n_exp, exp1, total_exp, total_time, perc_of_required, limit_mag, limit_mag_stack)
 
-        return cls(n_exp, exp1, total_exp, total_time, perc_of_required)
+        return cls(n_exp, exp1, total_exp, total_time, perc_of_required, limit_mag, limit_mag_stack)
 
 
     def delay_start(self) -> Quantity:
