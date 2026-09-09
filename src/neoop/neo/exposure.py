@@ -24,7 +24,7 @@
 #       limit_mag and limit_mag_stack attributes
 
 # Usage:
-#       from neo.exposure import Exposure
+#       from neoop.neo.exposure import Exposure
 
 VERSION     = "1.2 / 2026-09-08"
 AUTHOR      = "Martin Junius"
@@ -50,13 +50,13 @@ from neoop.neo.config import config
 
 @dataclass
 class Exposure:
-    """Exposure data"""
-    number: int                 # number of exposure
+    """Exposure data class"""
+    number: int                 # number of exposures
     single: Quantity            # single exposure time
     total: Quantity             # total net exposure time
     total_time: Quantity        # total gross exposure time incl. overhead
     percentage: float           # percentage of required total exposure time
-    limit_mag: Magnitude        # limiting mag for single exposure
+    limit_mag_single: Magnitude # limiting mag for single exposure
     limit_mag_stack: Magnitude  # limiting mag for single exposure
 
     def __str__(self):
@@ -65,8 +65,7 @@ class Exposure:
 
     @staticmethod
     def single_exp(motion: Quantity) -> Quantity:
-        """
-        Compute exposure time depending on motion value,
+        """Compute exposure time depending on motion value,
 
         Parameters
         ----------
@@ -94,8 +93,7 @@ class Exposure:
 
     @staticmethod
     def motion_limit() -> Quantity:
-        """
-        Get motion limit
+        """Get motion limit
 
         Returns
         -------
@@ -108,6 +106,20 @@ class Exposure:
 
     @staticmethod
     def min_n_exp(exp1: Quantity, motion: Quantity) -> int:
+        """Compute minimum number of exposures, i.e. to achieve configured minimum motion
+
+        Parameters
+        ----------
+        exp1 : Quantity
+            Single exposure time
+        motion : Quantity
+            Target motion
+
+        Returns
+        -------
+        int
+            Number of exposures
+        """
         min_motion = config.resolution * u.arcsec * config.pixel_min_motion
         min_time = min_motion / motion
         return int(min_time / exp1)
@@ -115,9 +127,7 @@ class Exposure:
 
     @classmethod
     def from_motion_mag(cls, max_motion: Quantity, mag: Magnitude) -> Self:
-        """
-        Calculate number of exposures, single exposure time, total exposure time, total time, percentage
-        from object motion and magnitude
+        """Calculate exposure data from object motion and magnitude
 
         Parameters
         ----------
@@ -155,10 +165,10 @@ class Exposure:
 
         # NEW calculation based on limiting mag of single exposure
         limit_mag_1s = Magnitude(config.limit_mag_1s)
-        limit_mag = Magnitude(limit_mag_1s.value + 10**0.4 * np.log10(exp1.value))
-        n_exp = int(10 ** (0.8 * (mag.value - limit_mag.value))) + 1
+        limit_mag_single = Magnitude(limit_mag_1s.value + 10**0.4 * np.log10(exp1.value))
+        n_exp = int(10 ** (0.8 * (mag.value - limit_mag_single.value))) + 1
         total_exp = n_exp * exp1
-        ic(limit_mag_1s, mag.value, exp1, limit_mag, total_exp, n_exp)
+        ic(limit_mag_1s, mag.value, exp1, limit_mag_single, total_exp, n_exp)
 
         perc_of_required = 100.                             # Percentage actual / total exposure
         if n_exp < min_n_exp:
@@ -168,7 +178,7 @@ class Exposure:
             perc_of_required = max_n_exp / n_exp * 100
             n_exp = max_n_exp
 
-        limit_mag_stack = Magnitude(np.log10(n_exp) / 0.8 + limit_mag.value)
+        limit_mag_stack = Magnitude(np.log10(n_exp) / 0.8 + limit_mag_single.value)
         total_exp = (n_exp * exp1).to(u.min)
         total_time = ( total_exp 
                     + config.dead_time_slew_center * u.s 
@@ -176,21 +186,46 @@ class Exposure:
                     + config.dead_time_guiding * u.s  
                     + config.safety_margin * u.s
                     + n_exp * config.dead_time_image * u.s )
-        ic(n_exp, exp1, total_exp, total_time, perc_of_required, limit_mag, limit_mag_stack)
+        ic(n_exp, exp1, total_exp, total_time, perc_of_required, limit_mag_single, limit_mag_stack)
 
-        return cls(n_exp, exp1, total_exp, total_time, perc_of_required, limit_mag, limit_mag_stack)
+        return cls(n_exp, exp1, total_exp, total_time, perc_of_required, limit_mag_single, limit_mag_stack)
 
 
     def delay_start(self) -> Quantity:
+        """Get delay time from start of target to actual start of exposure
+
+        Returns
+        -------
+        Quantity
+            Delay to start time of exposures
+        """
         return (config.dead_time_slew_center +
                 config.dead_time_af +
                 config.dead_time_guiding) * u.s
 
 
     def delay_mid(self) -> Quantity:
+        """Get delay time from start of target to mid time of exposures
+
+        Returns
+        -------
+        Quantity
+            Delay to mid time of exposures
+        """
         return (self.delay_start() + self.number / 2 * (self.single + config.dead_time_image*u.s))
 
 
     def track_len(self, motion: Quantity) -> Quantity:
+        """Compute track length of target
+
+        Parameters
+        ----------
+        motion : Quantity
+            Target motion
+
+        Returns
+        -------
+        Quantity
+            Track length
+        """
         return motion * (self.number * (self.single + config.dead_time_image * u.s)).to(u.min)
-    
