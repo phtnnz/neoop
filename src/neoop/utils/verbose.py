@@ -36,6 +36,9 @@
 #       Added print_lines2(), omitting 1st line string representation
 # Version 2.2 / 2026-06-16
 #       Moved and adapted to new directory structure under neoop/
+# Version 2.3 / 2026-08-20
+#       Added set_output_func() to allow rerouting of print() output to a function,
+#       added set_exit_func() to allow rerouting of sys.exit() output to a function
 #
 #       Usage:  from verbose import message, verbose, warning, error
 #               message(print-like-args)
@@ -49,26 +52,32 @@
 #               .enabled
 #               .set_prog(name)         global for all objects
 #               .set_errno(errno)       relevant only for error()
+#               .set_output_func(func)
+#               .set_exit_func(func)
 #
 #               with verbose.logfile(LOGFILE):
 #                   ...
 
-VERSION = "2.2 / 2026-06-16"
+VERSION = "2.3 / 2026-08-20"
 AUTHOR  = "Martin Junius"
 NAME    = "verbose"
 
 import argparse
 import sys
-from typing import TextIO
+from typing import TextIO, Callable
 from contextlib import contextmanager
 
 
 
 class Verbose:
     """Class for verbose-stype log output objects"""
-    _progname: str = ""          # global program name
-    _log_file: TextIO = None     # log file
-    _errno: int = 1              # exit code, 1 for generic errors
+    # Class attributes
+    _progname: str = ""             # global program name
+    _log_file: TextIO = None        # log file
+    _errno: int = 1                 # exit code, 1 for generic errors
+    _output_func: Callable = None   # output function to be used instead of print()
+    _exit_func: Callable = None     # exit function to be used instead of sys.exit()
+
 
     def __init__(self, flag: bool=False, prefix: str=None, abort: bool=False):
         """Constructor
@@ -87,21 +96,37 @@ class Verbose:
         self.abort = abort
 
 
+    @classmethod
+    def _output(cls, prefix: str, *args, **kwargs) -> None:
+        """Internal output function
+
+        Parameters
+        ----------
+        prefix : str
+            Prefix for output
+        """
+        preargs = ()
+        if cls._progname:
+            preargs = (f"{cls._progname}:", )
+        if prefix:
+            preargs = preargs + (f"{prefix}:", )
+        if preargs:
+            args = preargs + args
+        if cls._output_func:
+            # Send as one string to output func, keyword arg "sep" ignored
+            cls._output_func(" ".join([str(arg) for arg in args]), **kwargs)
+        else:
+            print(*args, **kwargs)
+        if cls._log_file:
+            print(*args, file=cls._log_file, **kwargs)
+
+
     def __call__(self, *args, **kwargs):
-        """Make Verbose objects callable like print()
+        """Make object print-like callable
         """
         if not self.enabled:
             return
-        preargs = ()
-        if Verbose._progname:
-            preargs = (f"{Verbose._progname}:", )
-        if self.prefix:
-            preargs = preargs + (f"{self.prefix}:", )
-        if preargs:
-            args = preargs + args
-        print(*args, **kwargs)
-        if Verbose._log_file:
-            print(*args, file=Verbose._log_file, **kwargs)
+        self._output(self.prefix, *args, **kwargs)
         if self.abort:
             self._exit()
 
@@ -139,7 +164,8 @@ class Verbose:
         self.enabled = False
 
 
-    def set_prog(self, name: str=""):
+    @classmethod
+    def set_prog(cls, name: str=""):
         """Set program name for output
 
         Parameters
@@ -147,10 +173,11 @@ class Verbose:
         name : str, optional
             Program name, by default ""
         """
-        Verbose._progname = name
+        cls._progname = name
 
 
-    def set_errno(self, errno: int):
+    @classmethod
+    def set_errno(cls, errno: int):
         """Set errno for error exit
 
         Parameters
@@ -158,17 +185,42 @@ class Verbose:
         errno : int
             System error number
         """
-        Verbose._errno = errno
+        cls._errno = errno
+
+
+    @classmethod
+    def set_output_func(cls, func: Callable) -> None:
+        """Set output function
+
+        Parameters
+        ----------
+        func : Callable
+            Output function
+        """
+        cls._output_func = func
+
+
+    @classmethod
+    def set_exit_func(cls, func: Callable) -> None:
+        """Set exit function, called for abort==True
+
+        Parameters
+        ----------
+        func : Callable
+            Exit function
+        """
+        cls._exit_func = func
 
 
     def _exit(self):
-        """Internal: exit script
+        """Internal exit function
         """
-        if verbose.enabled:
-            if Verbose._progname:
-                print(Verbose._progname + ": ", end="")
-            print(f"exiting ({Verbose._errno})")
-        sys.exit(Verbose._errno)
+        if self._exit_func:
+            self._exit_func()
+        else:
+            if verbose.enabled:
+                self._output(self.prefix, f"exiting ({Verbose._errno})")
+            sys.exit(self._errno)
 
 
     @contextmanager
@@ -186,6 +238,7 @@ class Verbose:
         finally:
             Verbose._log_file.close()
             Verbose._log_file = None
+
 
 
 """Global callables"""
