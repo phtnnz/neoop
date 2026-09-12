@@ -38,7 +38,7 @@
     "max_n_exp":                250,
     "min_perc_required":        45,
     "min_moon_dist":            40,
-    "min_arc":                  0.05,
+    "min_arc":                  0.04,
 
     "##2": "Config for JPL What's Observable? (sbwobs)",
     "sbwobs_url":   "https://ssd-api.jpl.nasa.gov/sbwobs.api",
