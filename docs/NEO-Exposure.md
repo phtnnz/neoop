@@ -2,7 +2,7 @@
 
 Location: M49, Hakos, Namibia - Bortle 1 skies
 
-Tycho "limiting magnitude" is from Image Evaluation Report, it seems that SNR 10 is the threshold.
+Tycho "limiting magnitude" is from Image Evaluation Report, for SNR 10 / LogSNR 1.0
 
 
 ## Telescope: 12" f/4 Newtonian
@@ -10,8 +10,6 @@ Tycho "limiting magnitude" is from Image Evaluation Report, it seems that SNR 10
 Camera: QHY 268 M, binning 2x2, L filter  
 High Gain Mode (1), gain 56, offset 10, cooling -5 °C  
 System gain 0.33, read-out noise 3.10 e-, dark current 1.65 e-/pixel/second
-
-Configured base exposure: 240 s for mag 18.0 object
 
 (Removed old measurements)
 
@@ -54,15 +52,15 @@ From Tycho Tracker's "Image Evaluation Report", SNR = 10, LogSNR = 1
 
 | Moon alt      | Exposure time | Limiting mag 10" | Limiting mag 12" |
 | ------------- | ------------- | ---------------- | ---------------- |
-| Below horizon | 2             | 15.5 - 15.6      | 16.1             |
+| Below horizon | 2             | 15.5 - 15.6      | 16.0 - 16.1      |
 | "             | 5             | 16.4 - 16.6      | 17.0 - 17.3      |
-| "             | 10            | 17.1 - 17.4      | 18.0             |
-| "             | 15            | 17.3 - 17.7      | 18.5             |
-| "             | 20            | 17.8 - 18.1      |                  |
+| "             | 10            | 17.1 - 17.4      | 17.4 - 17.8      |
+| "             | 15            | 17.3 - 17.7      |                  |
+| "             | 20            | 17.8 - 18.1      | 18.5 - 18.6      |
 | "             | 30            | 18.3 - 18.4      |                  |
 | "             | 45            | 18.8 - 18.9      |                  |
-| "             | 60            | 19.2 - 19.4      | 19.8 - 20.0      |
+| "             | 60            | 19.2 - 19.4      | 19.9 - 20.0      |
 |               | Regression    | 2.5 * LOG10(exposure) |             |
-|               | Base 1 s      | 14.6 - 14.8      | approx. + 0.6    |
+|               | Base 1 s      | 14.6 - 14.8      | approx. + 0.5    |
 
 ![Limiting mag for 10" - Remote2](Limit-Mag-10.png)
