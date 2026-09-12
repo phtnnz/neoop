@@ -5,10 +5,10 @@
 ```
 usage: neo-obs-planner [-h] [-v] [--verbose-ephem] [-d] [-l LOCATION] [-f FILE] [-s START] [-e END] [-o OUTPUT] [-C] [-P] [--clear] [-M MAG_LIMIT]
                        [--neocp-mag-limit NEOCP_MAG_LIMIT] [--sbwobs-mag-limit SBWOBS_MAG_LIMIT] [-m MIN_ALT] [--neocp] [--sbwobs] [--asteroids] [--neo] [--pha]
-                       [--comets] [-p PREFIX] [--force FORCE]
+                       [--comets] [-p PREFIX] [--force FORCE] [--find-orb]
                        [object ...]
 
-NEOCP/NEO observation planner
+NEOCP/NEO/comet observation planner
 
 positional arguments:
   object                object name
@@ -41,10 +41,11 @@ options:
   --neo                 sbwobs: get NEOs default=neo
   --pha                 sbwobs: get PHAs
   --comets              sbwobs: get comets (overrides asteroids options)
-  -p, --prefix PREFIX   prefix for planner data, default 20260815
+  -p, --prefix PREFIX   prefix for planner data, default 20260907
   --force FORCE         skip checks for FORCE objects, include in observation plan
+  --find-orb            compute ephemeris for mid exposure using find_orb
 
-Version 2.2 / 2026-07-04 / Martin Junius
+Version 2.4 / 2026-09-01 / Martin Junius
 ```
 
 Retrieve lists and ephemerides for upcoming night
@@ -116,16 +117,16 @@ options:
   -d, --debug      more debug messages
   -f, --file FILE  read objects from CSV FILE
 
-Version 0.2 / 2026-06-23 / Martin Junius
+Version 0.3 / 2026-08-21 / Martin Junius
 ```
 
 ```
-usage: neo-sbephem [-h] [-v] [-d] [-l LOCATION] [-f FILE] [-t TIME] [-J] [-a] [--obs] [--lastobs] [--clear] [object ...]
+usage: neo-sbephem [-h] [-v] [-d] [-l LOCATION] [-f FILE] [-t TIME] [-J] [-a] [--obs] [--lastobs] [--clear] [--find-orb] [object ...]
 
 Ephemeris for solar system objects
 
 positional arguments:
-  object                object name
+  object                object name, optionally OBJECT:TYPE (NEOCP|PCCP|NEO|COMET)
 
 options:
   -h, --help            show this help message and exit
@@ -140,8 +141,9 @@ options:
   --obs                 output MPC obs
   --lastobs             output MPC obs last row
   --clear               clear MPC cache
+  --find-orb            use find_orb to compute ephemerides
 
-Version 0.5 / 2026-06-25 / Martin Junius
+Version 0.6 / 2026-09-04 / Martin Junius
 ```
 
 ```

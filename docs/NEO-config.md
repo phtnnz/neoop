@@ -180,3 +180,5 @@ URLs of MPC previous NEOCP objects and MPC
 ```
 }
 ```
+
+FIXME: add new config stuff

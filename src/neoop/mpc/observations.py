@@ -17,8 +17,10 @@
 # ChangeLog
 # Version 0.1 / 2026-06-25
 #       Get observations from MPC database
+# Version 0.2 / 2026-09-01
+#       Also get NEOCP observations from MPC
 
-VERSION     = "0.1 / 2026-06-25"
+VERSION     = "0.2 / 2026-09-01"
 AUTHOR      = "Martin Junius"
 NAME        = "neoop.mpc.observations"
 DESCRIPTION = "Retrieve MPC observations data"
@@ -26,6 +28,7 @@ DESCRIPTION = "Retrieve MPC observations data"
 import re
 from dataclasses import dataclass
 from typing import Self
+import requests
 
 from icecream import ic
 # Disable debugging
@@ -39,50 +42,45 @@ import astropy.units as u
 
 from astroquery.mpc import MPC
 
+# NEOOP
+from neoop.neo.config import config
+from neoop.utils.verbose import verbose, error
+
+# Requests timeout
+TIMEOUT = config.requests_timeout
+
 
 
 @dataclass
 class Obs:
     table: QTable = None
 
-    def _rename_columns_mpc(self) -> None:
-        self.table.rename_columns(("Date",    "Dec",      "V",             "Proper motion", "Direction", 
-                                   "Azimuth", "Altitude", "Moon distance", "Moon altitude" ),
-                                  # -->
-                                  ("Obstime", "DEC",      "Mag",           "Motion",        "PA",        
-                                   "Az",      "Alt",      "Moon_dist",     "Moon_alt"      ))
+    def get_observations(self, obj: str, mpcformat: bool=False) -> None:
+        try:
+            table = MPC.get_observations(obj, get_mpcformat=mpcformat)
+        except ValueError:
+            error(f"retrieving MPC observations for {obj}, use {obj}:NEOCP?")
 
-
-    def _id_type_from_name(name: str) -> str:
-        id_type_regex = {   "asteroid number":        r'^[1-9][0-9]*$',
-                            "asteroid designation":   r'^\d{4}[ _][A-Z]{1,2}\d{0,3}$',
-                            "comet number":           r'^[0-9]{1,3}[PIA]$',
-                            "comet designation":      r'^[PDCXAI]\/\d{4}[ _][A-Z]{1,2}\d{0,3}$'
-                        }
-
-        for id, regex in id_type_regex.items():
-            m = re.match(regex, name)
-            if m:
-                ic(name, id)
-                return id
-        ## Default None or "asteroid designation"?
-        return None
-
-
-    def get_observations(self, obj: str) -> Self:
-        table = MPC.get_observations(obj)
-        # table["Targetname"] = obj
-        # # table is already a QTable
-        # self.table = QTable(table, meta={**table.meta})
-        # self._rename_columns_mpc()
+        # table is already a QTable
         self.table = table
-        return self
+
+
+    def get_observations_neocp(self, obj: str, mpcformat: bool=False) -> None:
+        if not mpcformat:
+            raise NotImplementedError("mpcformat=False (default) not implemented for NEOCP observations")
+        # verbose(f"query {config.neocp_obs_url}")
+        content = mpc_query_neocp_obs(config.neocp_obs_url, obj)
+        table = parse_neocp_obs(content)
+        self.table = table
 
 
     @classmethod
-    def from_object(cls, obj: str) -> Self:
+    def from_object(cls, obj: str, mpcformat: bool=False, neocp: bool=False) -> Self:
         obs = cls()
-        obs.get_observations(obj)
+        if neocp:
+            obs.get_observations_neocp(obj, mpcformat)
+        else:
+            obs.get_observations(obj, mpcformat)
         return obs
     
 
@@ -108,3 +106,45 @@ class Obs:
             time = Time(jd, format="jd")
             time.format = "iso"
             return time
+
+
+    def write_mpcformat(self, filename: str) -> None:
+        ic(self.table.columns)
+        if not "obs" in self.table.columns:
+            raise IndexError("table not in mpc80 format (single 'obs' column)")
+        with open(filename, "w") as file:
+            for line in self.table["obs"]:
+                print(line, file=file)
+
+
+
+def mpc_query_neocp_obs(url: str, target: str) -> str:
+
+    # Example query:
+    # https://cgi.minorplanetcenter.net/cgi-bin/showobsorbs.cgi?Obj=ST26H93&obs=y
+    data = { 
+        "Obj": target,
+        "obs": "y"
+    }
+
+    ic(url, data)
+    response = requests.get(url, params=data, timeout=TIMEOUT)
+    ic(response.status_code)
+    if response.status_code != 200:
+        error(f"query to {url} failed")
+
+    return response.text
+
+
+
+def parse_neocp_obs(content: str) -> QTable:
+    qt = QTable()
+    qt["obs"] = ""
+
+    for line in content.splitlines():
+        # Skip HTML
+        if "<pre>" in line or "</pre>" in line:
+            continue
+        qt.add_row([line])
+    ic(qt)
+    return qt

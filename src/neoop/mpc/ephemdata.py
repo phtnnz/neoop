@@ -19,8 +19,10 @@
 #       EphemData and related data structures handling
 # Version 0.2 / 2026-08-19
 #       Added EphemDataList.from_single_neocp() class method
+# Version 0.3 / 2026-09-04
+#       Added add_ephem_find_orb() methods
 
-VERSION     = "0.2 / 2026-08-19"
+VERSION     = "0.3 / 2026-09-04"
 AUTHOR      = "Martin Junius"
 NAME        = "neoop.mpc.ephemdata"
 DESCRIPTION = "MPC ephemeris and lists"
@@ -48,6 +50,7 @@ from neoop.neo.local import LocalCircumstances
 from neoop.neo.exposure import Exposure
 from neoop.neo.config import config
 from neoop.mpc.observations import Obs
+from neoop.pyfo.pyfo import FindOrb
 
 
 
@@ -184,7 +187,7 @@ class EphemData:
         return self
 
 
-    def add_ephem_mpc(self, local: LocalCircumstances) -> Self:
+    def add_ephem_mpc(self, local: LocalCircumstances) -> None:
         if self.ephem:
             verbose(f"already got ephemeris for {self.obj}")
             return
@@ -210,7 +213,35 @@ class EphemData:
         self.mag = mag
         self.motion = motion
 
-        return self
+
+    def add_ephem_find_orb(self, local: LocalCircumstances) -> None:
+        if self.ephem:
+            verbose(f"already got ephemeris for {self.obj}")
+            return
+
+        min_alt = config.min_alt
+
+        obj = self.obj
+        verbose(f"{obj} ephemeris from find_orb")
+        fo = FindOrb.from_object(local, obj, neocp=self.type=="NEOCP" or self.type=="PCCP")
+        eph = Ephem.from_table(fo.table)
+
+        mask = (eph["Alt"] > min_alt * u.deg) & (eph["Obstime"] >= local.naut_dusk) & (eph["Obstime"] <= local.naut_dawn)
+        eph1 = Ephem(eph[mask])
+        if len(eph1) == 0:
+            warning(f"skipping empty ephemeris for {obj}")
+            return
+        mag = eph1.get_mag0()
+        motion = eph1.get_max_motion()
+
+        # Copy to EphemData
+        if self.wobs:
+            self.type = self.wobs.type.upper()
+        self.obj = obj
+        self.ephem = eph1
+        self.mag = mag
+        self.motion = motion
+
 
 
     def add_exposure(self) -> Self:
@@ -302,6 +333,13 @@ class EphemDataList(list):
         return self
 
 
+    def add_ephem_find_orb(self, local: LocalCircumstances) -> Self:
+        edata: EphemData
+        for edata in self:
+            edata.add_ephem_find_orb(local)
+        return self
+
+
     def add_ephem_times(self, col_obstime: str="Obstime", col_alt: str="Alt", col_az: str="Az", use_old_sort: bool=False) -> Self:
         edata: EphemData
         for edata in self:
@@ -382,7 +420,8 @@ class EphemDataList(list):
                             "moon alt": float(edata.moon_alt.value),
                             "telescope": "REMOTE",
                             "limit mag": "MAG1",
-                            "limit mag stack": "MAG2"
+                            "limit mag stack": "MAG2",
+                            "measured mag": "MAG3"
                             }
                 ic(csv_row)
                 csv_output(csv_row)

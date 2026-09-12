@@ -40,8 +40,10 @@
 #       Added output of Moon altitude
 # Version 2.3 / 2026-08-18
 #       Use mid track exposure time, added to output
+# Version 2.4 / 2026-09-01
+#       Added --find-orb option
 
-VERSION     = "2.3 / 2026-08-18"
+VERSION     = "2.4 / 2026-09-01"
 AUTHOR      = "Martin Junius"
 NAME        = "neo-obs-planner"
 DESCRIPTION = "NEOCP/NEO/comet observation planner"
@@ -56,6 +58,7 @@ ic.disable()
 # AstroPy
 from astropy.time import Time
 import astropy.units as u
+from astropy.table import Row
 from astroquery.mpc import MPC
 
 # Local modules
@@ -63,12 +66,28 @@ from neoop.utils.verbose import verbose, warning, error, message
 from neoop.astro.utils   import fmt_time
 from neoop.neo.config    import config
 from neoop.neo.classes   import EphemData, EphemDataList, LocalCircumstances, Exposure
+from neoop.pyfo.pyfo     import FindOrb
+from neoop.mpc.observations import Obs
 import neoop.neo.files   ##FIXME: better approach
 import neoop.neo.plot    # provides EphemDataList.plot
 import neoop.jpl.sbwobs  # provides EphemDataList.from_sbwobs
 import neoop.mpc.neocp   # provides EphemDataList.from_neocp
 
 DEFAULT_LOCATION = config.code
+
+
+
+class Options:
+    """Global command line options"""
+    find_orb: bool = False          # --find-orb
+
+
+
+def find_orb(edata: EphemData, local: LocalCircumstances, mid_time: Time) -> Row:
+    neocp = edata.type == "NEOCP" or edata.type == "PCCP"
+    obs = Obs.from_object(edata.obj, mpcformat=True, neocp=neocp)
+    fo = FindOrb.from_obs(local, edata.obj, obs, nautical=False, start=mid_time)
+    return fo.table[0]
 
 
 
@@ -256,9 +275,6 @@ def obs_planner_1(edata_list: EphemDataList, local: LocalCircumstances) -> None:
 
         ra, dec = row["RA"].to(u.hourangle), row["DEC"]
         alt, az = row["Alt"], row["Az"]
-        edata.ra, edata.dec = ra, dec
-        edata.alt, edata.az = alt, az
-        edata.moon_dist, edata.moon_alt = moon_dist, moon_alt
         objects.append(obj)
 
         message(f"{'':56s}{fmt_time(before)} / {fmt_time(after)}              {moon_dist:3.0f}")
@@ -266,6 +282,21 @@ def obs_planner_1(edata_list: EphemDataList, local: LocalCircumstances) -> None:
         message(f"{'':56s}{fmt_time(exp_mid_time)}")
         message(f"{'':56s}{edata.exposure}")
         message(f"{'':56s}RA {ra:.4f}, DEC {dec:.4f}, Alt {alt:.0f}, Az {az:.0f}")
+
+        # Re-compute coordinates for mid exposure time using find_orb
+        if Options.find_orb:
+            row = find_orb(edata, local, exp_mid_time)
+            ic(row)
+            ra, dec = row["RA"].to(u.hourangle), row["DEC"]
+            alt, az = row["Alt"], row["Az"]
+            moon_dist = row["Moon_dist"]
+            moon_alt = row["Moon_alt"]
+            message(f"{'':34s}find_orb mid exposure RA {ra:.4f}, DEC {dec:.4f}, Alt {alt:.0f}, Az {az:.0f}")
+
+        edata.ra, edata.dec = ra, dec
+        edata.alt, edata.az = alt, az
+        edata.moon_dist, edata.moon_alt = moon_dist, moon_alt
+
 
     # end for
     message("----------------------------------------------------------------------------------------------------------------------")
@@ -306,6 +337,7 @@ def main():
  
     arg.add_argument("-p", "--prefix", help=f"prefix for planner data, default {neoop.neo.files.prefix}")
     arg.add_argument("--force", help=f"skip checks for FORCE objects, include in observation plan")
+    arg.add_argument("--find-orb", action="store_true", help=f"compute ephemeris for mid exposure using find_orb")
 
     arg.add_argument("object", nargs="*", help="object name")
 
@@ -317,6 +349,8 @@ def main():
     if args.verbose:
         verbose.set_prog(NAME)
         verbose.enable()
+
+    Options.find_orb = args.find_orb
 
     # override defaults from config
     if args.mag_limit:

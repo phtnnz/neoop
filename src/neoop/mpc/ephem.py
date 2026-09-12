@@ -39,11 +39,13 @@ from astropy.coordinates import Angle, AltAz
 import astropy.units as u
 import numpy as np
 from astroquery.mpc import MPC
+from astroquery.exceptions import InvalidQueryError
+
 
 # Local modules
 from neoop.astro.utils import is_east, is_west
 from neoop.neo.local import LocalCircumstances
-
+from neoop.utils.verbose import error
 
 
 @dataclass
@@ -83,8 +85,13 @@ class Ephem:
             number = 10
         ic(start, step, stop, number)
         
-        table = MPC.get_ephemeris(obj, location=local.loc,
-                                  start=start, step=step, number=number)
+        # Get ephemeris data from MPC
+        try:
+            table = MPC.get_ephemeris(obj, location=local.loc,
+                                      start=start, step=step, number=number)
+        except InvalidQueryError:
+            error(f"retrieving MPC ephemeris data for {obj}, use --find-orb and {obj}:NEOCP?")
+
         table["Targetname"] = obj
         # Adopted from sbpy.data: convert Table returned from MPC.get_ephemeris
         # to QTable with Quantity when indexing

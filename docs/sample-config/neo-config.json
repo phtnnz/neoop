@@ -27,15 +27,18 @@
 
     "base_exp":                 240,
     "base_mag":                 18,
+
+    "##1a":                     "limiting mag (SNR=1) for 1s exposure (Remote2)",
+    "limit_mag_1s":             14.6,
     
     "min_n_obs":                4,
     "max_notseen":              4,
-    "opt_alt":                  50,
+    "opt_alt":                  45,
     "min_n_exp":                30,
     "max_n_exp":                250,
     "min_perc_required":        45,
-    "min_moon_dist":            50,
-    "min_arc":                  0.05,
+    "min_moon_dist":            40,
+    "min_arc":                  0.04,
 
     "##2": "Config for JPL What's Observable? (sbwobs)",
     "sbwobs_url":   "https://ssd-api.jpl.nasa.gov/sbwobs.api",
@@ -60,6 +63,19 @@
 
     "##4": "Config for Previous NEO Confirmation Page Objects",
     "prev_neocp_url":   "https://www.minorplanetcenter.net/iau/NEO/ToConfirm_PrevDes.html",
-    "mpc_url":          "https://www.minorplanetcenter.net"
+    "mpc_url":          "https://www.minorplanetcenter.net",
 
+    "##5": "Config for NEOCP observations",
+    "neocp_obs_url":    "https://cgi.minorplanetcenter.net/cgi-bin/showobsorbs.cgi",
+    
+    "##6": "Config for find_orb related stuff, see find_orb.md",
+    "find_orb_dir":     "find_orb",
+    "fo_exe":           "fo64.exe",
+    "fo_mpc80":         "data.mpc80",
+    "fo_json":          "ephemeri.json",
+    "fo_txt":           "ephem.txt",
+    "fo_debug":         "debug.txt",
+    "fo_args":          [ "-E", "3,5,10,27,28,29,35,36" ],
+
+    "##END": ""
 }
