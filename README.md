@@ -41,6 +41,9 @@ Install the package and dependencies:
 > pip install -e .
 ```
 
+If you're using VSCode, I strongly recommend running pip from a VSCode terminal. Otherwise Pylance may throw "missing module" errors.
+
+
 ## Installed Modules
 
 If you want to install from scratch in a new Python venv, the following modules and their dependencies are required:
