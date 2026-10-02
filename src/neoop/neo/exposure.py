@@ -60,7 +60,7 @@ class Exposure:
     limit_mag_stack: Magnitude  # limiting mag for single exposure
 
     def __str__(self):
-        return f"{self.number} x {self.single:.0f} = {self.total:3.1f} ({self.percentage:.0f}%) / total {self.total_time:3.1f}, limit mag={self.limit_mag_stack:.1f}"
+        return f"{self.number} x {self.single:.0f} = {self.total:3.1f} ({self.percentage:.0f}%) / {self.total_time:3.1f}, limit mag={self.limit_mag_stack:.1f}"
 
 
     @staticmethod

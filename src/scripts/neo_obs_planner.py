@@ -99,8 +99,8 @@ def obs_planner_1(edata_list: EphemDataList, local: LocalCircumstances) -> None:
 
     message("======================================================================================================================")
     message("                 Score       Mag #Obs      Arc NotSeen  Time start ephemeris/ end ephemeris                 Max motion")
-    message("          /Uncertainty                                  Time before         / after meridian             Moon distance")
-    message("                                                        Time start exposure / end exposure                    Moon alt")
+    message("          /Uncertainty                                  Time before         / after meridian                        PA")
+    message("                                                        Time start exposure / end exposure             Moon dist / alt")
     message("                                                        Time mid exposure                                             ")
     message("                                                        # x Exp = total exposure time")
     message("                                                        RA, DEC, Alt, Az")
@@ -275,10 +275,11 @@ def obs_planner_1(edata_list: EphemDataList, local: LocalCircumstances) -> None:
 
         ra, dec = row["RA"].to(u.hourangle), row["DEC"]
         alt, az = row["Alt"], row["Az"]
+        pa      = row["PA"]
         objects.append(obj)
 
-        message(f"{'':56s}{fmt_time(before)} / {fmt_time(after)}              {moon_dist:3.0f}")
-        message(f"{'':56s}{fmt_time(exp_start)} / {fmt_time(exp_end)}              {moon_alt:3.0f}")
+        message(f"{'':56s}{fmt_time(before)} / {fmt_time(after)}              {pa:3.0f}")
+        message(f"{'':56s}{fmt_time(exp_start)} / {fmt_time(exp_end)}    {moon_dist:3.0f} / {moon_alt:3.0f}")
         message(f"{'':56s}{fmt_time(exp_mid_time)}")
         message(f"{'':56s}{edata.exposure}")
         message(f"{'':56s}RA {ra:.4f}, DEC {dec:.4f}, Alt {alt:.0f}, Az {az:.0f}")
