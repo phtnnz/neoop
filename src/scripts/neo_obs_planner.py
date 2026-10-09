@@ -164,20 +164,14 @@ def obs_planner_1(edata_list: EphemDataList, local: LocalCircumstances) -> None:
         if next_start_time > end:
             end = None
 
-        # check valid exposure data, skip if None = object is too fast
-        ##FIXME: meanwhile this should be called earlier
-        if edata.exposure:
-            total_time = edata.exposure.total_time
-        else:
-            message(f"SKIPPED: object too fast (>{Exposure.motion_limit():.1f})")
-            skipped.append(obj)
-            continue
+        total_time = edata.exposure.total_time
 
-        # Skip, if ephemeris is only 1 line
-        if len(eph) < 2:
-            message(f"SKIPPED: only {len(eph)} line(s) of ephemeris data")
-            skipped.append(obj)
-            continue
+        # # Handled in ephemdata module!
+        # # Skip, if ephemeris is only 1 line
+        # if len(eph) < 2:
+        #     message(f"SKIPPED: only {len(eph)} line(s) of ephemeris data")
+        #     skipped.append(obj)
+        #     continue
 
         ic(next_start_time.iso)
         ic(obj, start, end, total_time, alt_start, alt_end, before, after)
