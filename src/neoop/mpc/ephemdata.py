@@ -184,14 +184,17 @@ class EphemData:
             if etimes.alt_start != None:
                 self.sort_time = etimes.alt_start
 
-        return self
 
 
     def add_ephem_mpc(self, local: LocalCircumstances) -> None:
+        if self.ephem and len(self.ephem) < 2:
+            verbose(f"only {len(eph)} line(s) of ephemeris data for {self.obj}")
+            self.ephem = None
+            return
         if self.ephem:
             verbose(f"already got ephemeris for {self.obj}")
             return
-
+        
         min_alt = config.min_alt
 
         obj = self.obj
@@ -212,6 +215,7 @@ class EphemData:
         self.ephem = eph1
         self.mag = mag
         self.motion = motion
+
 
 
     def add_ephem_find_orb(self, local: LocalCircumstances) -> None:
@@ -256,7 +260,6 @@ class EphemData:
             if self.motion != None:
                 warning(f"motion={self.motion:.2f}, limit={Exposure.motion_limit():.2f}")
 
-        return self
 
 
     def add_comet_prefix(self) -> Self:
@@ -265,7 +268,7 @@ class EphemData:
         if self.wobs.full_name[1] == "/":
             # Comet full name contains X/ prefix
             self.obj = self.wobs.designation = f"{self.wobs.full_name[0]}/{self.obj}"
-        return self
+
 
 
     def add_last_obs(self) -> Self:
@@ -275,7 +278,6 @@ class EphemData:
         self.wobs.last_obs = obs.get_last_obs()
         verbose(f"{self.obj}: last obs {self.wobs.last_obs.iso}")
         ic(self.obj, self.wobs.last_obs.iso)
-        return self
 
 
 
@@ -308,7 +310,6 @@ class EphemDataList(list):
     
     def extend_objects(self, objects: list[str]) -> Self:
         self.extend([ EphemData("-", obj) for obj in objects ])
-        return self
 
     def sort_by_time(self) -> None:
         return self.sort(key=lambda item: item.sort_time)
@@ -323,21 +324,18 @@ class EphemDataList(list):
     def process(self, func: Callable, *args, **kwargs) -> Self:
         for edata in self:
             func(edata, *args, **kwargs)
-        return self
 
 
     def add_ephem_mpc(self, local: LocalCircumstances) -> Self:
         edata: EphemData
         for edata in self:
             edata.add_ephem_mpc(local)
-        return self
 
 
     def add_ephem_find_orb(self, local: LocalCircumstances) -> Self:
         edata: EphemData
         for edata in self:
             edata.add_ephem_find_orb(local)
-        return self
 
 
     def add_ephem_times(self, col_obstime: str="Obstime", col_alt: str="Alt", col_az: str="Az", use_old_sort: bool=False) -> Self:
@@ -347,14 +345,12 @@ class EphemDataList(list):
                 edata.add_ephem_times(col_obstime, col_alt, col_az, use_old_sort)
             else:
                 warning(f"no ephemeris for {edata.obj}")
-        return self
 
 
     def add_exposure(self) -> Self:
         edata: EphemData
         for edata in self:
             edata.add_exposure()
-        return self
 
 
     def csv_output(self, output: str) -> None:
