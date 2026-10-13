@@ -31,7 +31,7 @@ dependencies = [
     "astropy",
     "astroquery",
     "astroplan",
-    "matplotlib<3.11",
+    "matplotlib>=3.10,<3.11",
     "tzdata",
 ]
 
