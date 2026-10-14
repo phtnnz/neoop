@@ -188,7 +188,7 @@ class EphemData:
 
     def add_ephem_mpc(self, local: LocalCircumstances) -> None:
         if self.ephem and len(self.ephem) < 2:
-            verbose(f"only {len(eph)} line(s) of ephemeris data for {self.obj}")
+            verbose(f"only {len(self.ephem)} line(s) of ephemeris data for {self.obj}")
             self.ephem = None
             return
         if self.ephem:
