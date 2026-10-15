@@ -64,3 +64,7 @@ From Tycho Tracker's "Image Evaluation Report", SNR = 10, LogSNR = 1
 |               | Base 1 s      | 14.6 - 14.8      | approx. + 0.5    |
 
 ![Limiting mag for 10" - Remote2](Limit-Mag-10.png)
+
+Approximation based an 10" data:
+
+Limiting mag = 17.6 + 5 * log10(aperture/m) + 2.5 * log10(exposure/s)
