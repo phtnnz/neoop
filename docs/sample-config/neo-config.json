@@ -25,15 +25,12 @@
     "dead_time_guiding":        30,
     "safety_margin":            150,
 
-    "base_exp":                 240,
-    "base_mag":                 18,
-
     "##1a":                     "limiting mag (SNR=1) for 1s exposure (Remote2)",
     "limit_mag_1s":             14.6,
     
     "min_n_obs":                4,
     "max_notseen":              4,
-    "opt_alt":                  45,
+    "opt_alt":                  40,
     "min_n_exp":                30,
     "max_n_exp":                250,
     "min_perc_required":        45,
