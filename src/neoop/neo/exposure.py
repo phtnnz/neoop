@@ -126,7 +126,7 @@ class Exposure:
     
 
     @classmethod
-    def from_motion_mag(cls, max_motion: Quantity, mag: Magnitude) -> Self:
+    def from_motion_mag(cls, max_motion: Quantity, mag: Magnitude) -> Self | None:
         """Calculate exposure data from object motion and magnitude
 
         Parameters
@@ -141,8 +141,11 @@ class Exposure:
         Exposure
             Exposure object
         """
-        exp1 = cls.single_exp(max_motion)                      # Single exposure / s
-        if exp1 == None:                                     # Object too fast
+        ic(max_motion, mag)
+        if mag == "":                                   # Empty mag
+            return None
+        exp1 = cls.single_exp(max_motion)               # Single exposure / s
+        if exp1 == None:                                # Object too fast
             return None
 
         min_n_exp = config.min_n_exp
