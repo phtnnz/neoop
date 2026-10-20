@@ -147,6 +147,7 @@ def main():
         # Get ephemeris from MPC
             edata.add_ephem_mpc(local)
 
+        ##FIXME: add_exposure() must check for valid "Mag" column!
         edata.add_exposure()
         ic(edata)
 
