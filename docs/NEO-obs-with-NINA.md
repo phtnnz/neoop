@@ -3,10 +3,10 @@
 ## N.I.N.A Profiles
 
 ### IAS Telescope Remote2
-Use profile "STD - Remote2 PHD2 NEOs" or "STD - Remote2 Mount Dither NEOs".
+Use profile "NEO - Remote2 PHD2" or "NEO - Remote2 Mount Dither".
 
 ### IAS Telescope Remote3
-Use profile "STD - Remote3 PHD2 NEOs" or "STD - Remote3 Mount Dither NEOs".
+Use profile "NEO - Remote3 PHD2" or "NEO - Remote3 Mount Dither".
 
 Images are stored under Image file path > _asteroids_YYYY-MM-DD > TARGET, must be the same as the 
 ```"subdir": "_asteroids_{1}"```
