@@ -30,8 +30,10 @@
 # Version 0.6 / 2026-09-04
 #       Added --find-orb option using find_orb to compute ephemeris, 
 #       object type can be specified with :NEOCP, :PCCP, :NEO, :COMET
+# Version 0.7 / 2026-10-20
+#       Added -8 / --mpc-format option
 
-VERSION     = "0.6 / 2026-09-04"
+VERSION     = "0.7 / 2026-10-20"
 AUTHOR      = "Martin Junius"
 NAME        = "neo-sbephem"
 DESCRIPTION = "Ephemeris for solar system objects"
@@ -72,6 +74,7 @@ def main():
     arg.add_argument("-a", "--allnight", action="store_true", help="ephemeris for midnight +/- 8h (30min steps)")
     arg.add_argument("--obs", action="store_true", help="output MPC obs")
     arg.add_argument("--lastobs", action="store_true", help="output MPC obs last row")
+    arg.add_argument("-8", "--mpc-format", action="store_true", help="output in MPC 80 columns format")
     arg.add_argument("--clear", action="store_true", help="clear MPC cache")
     arg.add_argument("--find-orb", action="store_true", help="use find_orb to compute ephemerides")
     arg.add_argument("object", nargs="*", help="object name, optionally OBJECT:TYPE (NEOCP|PCCP|NEO|COMET)")
@@ -159,7 +162,7 @@ def main():
             continue
 
         if args.obs:
-            obs = Obs.from_object(obj)
+            obs = Obs.from_object(obj, mpcformat=args.mpc_format)
             verbose.print_lines2(obs)
         if args.lastobs:
             obs = Obs.from_object(obj)

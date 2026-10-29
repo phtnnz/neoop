@@ -26,10 +26,10 @@ This is my personal development, not necessarily usable for anyone else. This co
 
 Clone the repository, create an virtual environment, and activate it (Windows command line):
 ```
-> git clone https://github.com/phtnnz/neoop.git
-> cd neoop
-> python -m venv venv
-> .\venv\Scripts\activate.bat
+git clone https://github.com/phtnnz/neoop.git
+cd neoop
+python -m venv venv
+.\venv\Scripts\activate.bat
 ```
 or using PowerShell (automatically handled by VSCode)
 ```
@@ -38,7 +38,7 @@ or using PowerShell (automatically handled by VSCode)
 
 Install the package and dependencies:
 ```
-> pip install -e .
+pip install -e .
 ```
 
 If you're using VSCode, I strongly recommend running pip from a VSCode terminal. Otherwise Pylance may throw "missing module" errors.
@@ -59,10 +59,10 @@ If you want to install from scratch in a new Python venv, the following modules 
 | tzdata     |
 
 ```
-> pip install icecream requests astropy astroquery astroplan "matplotlib<3.11" tzdata
+pip install icecream requests astropy astroquery astroplan "matplotlib>=3.10,<3.11" tzdata
 ```
 
-Please note that matplotlib < 3.11 must be installed, until this issue is fixed in astroplan:  
+Please note that matplotlib 3.10 must be installed, until this issue is fixed in astroplan:  
 https://github.com/astropy/astroplan/issues/603  
 https://github.com/astropy/astroplan/pull/636
 

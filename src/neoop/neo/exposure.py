@@ -60,7 +60,7 @@ class Exposure:
     limit_mag_stack: Magnitude  # limiting mag for single exposure
 
     def __str__(self):
-        return f"{self.number} x {self.single:.0f} = {self.total:3.1f} ({self.percentage:.0f}%) / total {self.total_time:3.1f}, limit mag={self.limit_mag_stack:.1f}"
+        return f"{self.number} x {self.single:.0f} = {self.total:3.1f} ({self.percentage:.0f}%) / {self.total_time:3.1f}, limit mag={self.limit_mag_stack:.1f}"
 
 
     @staticmethod
@@ -126,7 +126,7 @@ class Exposure:
     
 
     @classmethod
-    def from_motion_mag(cls, max_motion: Quantity, mag: Magnitude) -> Self:
+    def from_motion_mag(cls, max_motion: Quantity, mag: Magnitude) -> Self | None:
         """Calculate exposure data from object motion and magnitude
 
         Parameters
@@ -141,8 +141,11 @@ class Exposure:
         Exposure
             Exposure object
         """
-        exp1 = cls.single_exp(max_motion)                      # Single exposure / s
-        if exp1 == None:                                     # Object too fast
+        ic(max_motion, mag)
+        if mag == "":                                   # Empty mag
+            return None
+        exp1 = cls.single_exp(max_motion)               # Single exposure / s
+        if exp1 == None:                                # Object too fast
             return None
 
         min_n_exp = config.min_n_exp

@@ -1,4 +1,4 @@
-# NEO Config Parameters
+# NEOOP Config Parameters
 
 ## JSON Config Files
 
@@ -15,170 +15,219 @@ See sample-config/ in the repository for configuration examples.
 
 
 ## Config file: ```neo-config.json```
+Used by NEO Obs Planner and related utilities.
 
 ```
-{
-    "requests_timeout":         60,
+"requests_timeout":         60,
 ```
 Timeout for web URL requests
 ```
-    "##1": "Config for NEOCP planning (mpcneocp)",
-    "exposure_times":           [ 2, 5, 10, 15, 20, 30, 45, 60 ],
+"exposure_times":           [ 2, 5, 10, 15, 20, 30, 45, 60 ],
 ```
 List of used exposure times
 ```
-    "url_neocp_query":          "https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi",
-    "url_neocp_list":           "https://minorplanetcenter.net/iau/NEO/neocp.txt",
-    "url_pccp_list":            "https://minorplanetcenter.net/iau/NEO/pccp.txt",
+"url_neocp_query":          "https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi",
+"url_neocp_list":           "https://minorplanetcenter.net/iau/NEO/neocp.txt",
+"url_pccp_list":            "https://minorplanetcenter.net/iau/NEO/pccp.txt",
 ```
 URLs of MPC NEOCP pages and lists
 ```
-    "neo_obs_data_dir":         "NEOOP-data",
+"neo_obs_data_dir":         "NEOOP-data",
 ```
 Directory for log, observation plan, exposure data, sky plot image
 ```
-    "code":                     "M49",
+"code":                     "M49",
 ```
 MPC station code of location
 ```
-    "neocp_mag_limit":          20.5,
+"neocp_mag_limit":          20.5,
 ```
 Magnitude limit for NEOCP objects
 ```
-    "sbwobs_mag_limit":         19.5,
+"sbwobs_mag_limit":         19.5,
 ```
-Magnitude limit for SBWObs objects
+Magnitude limit for objects
 ```
-    "min_alt":                  26,
+"min_alt":                  26,
 ```
 Minimum altitude of objects
 ```
-    "pixel_tolerance":          2,
+"pixel_tolerance":          2,
 ```
 Tolerance for moving objects to calculate max exposure time / pixel
 ```
-    "pixel_min_motion":         6,
+"pixel_min_motion":         6,
 ```
 Min total motion of objects to calculate number of exposures / pixel
 ```
-    "resolution":               1.33,
+"resolution":               1.33,
 ```
-Telescope and camera resolution / arcsec
+Telescope and camera resolution / arcsec per pixel
 ```
-    "dead_time_slew_center":    90,
+"dead_time_slew_center":    90,
 ```
-Dead time for slewing to target / sec
+Dead time for slewing to target and plate solve / sec
 ```
-    "dead_time_af":             100,
+"dead_time_af":             100,
 ```
 Dead time for autofocus / sec
 ```
-    "dead_time_image":          1.5,
+"dead_time_image":          1.5,
 ```
 Dead time *per* image / sec
 ```
-    "dead_time_guiding":        30,
+"dead_time_guiding":        30,
 ```
 Dead time to start guiding / sec
 ```
-    "safety_margin":            150,
+"safety_margin":            150,
 ```
 Dead time safety margin
+
 ```
-    "base_exp":                 240,
+"limit_mag_1s":             14.6,
 ```
-Base total exposure for objects at ```base_mag```` magnitude / sec
+Limiting mag of telescope/camera setup for a 1 s exposure, used to calculate total exposure for objects
+
 ```
-    "base_mag":                 18,
-```
-Base magnitude
-```
-    "min_n_obs":                4,
+"min_n_obs":                4,
 ```
 Min number of required observations, otherwise skipped
+
 ```
-    "max_notseen":              4,
+"max_notseen":              4,
 ```
 Max time object not seen, otherwise skipped / days
+
 ```
-    "opt_alt":                  50,
+"opt_alt":                  50,
 ```
-Optimal, preferred altitude of objects
+Optimal, preferred min altitude of objects
+
 ```
-    "min_n_exp":                30,
+"min_n_exp":                30,
 ```
 Min number of exposures per object
+
 ```
-    "max_n_exp":                250,
+"max_n_exp":                250,
 ```
 Max number of exposures per object
+
 ```
-    "min_perc_required":        45,
+"min_perc_required":        45,
 ```
 Min percentage of required total exposure time, otherwise skipped
+
 ```
-    "min_moon_dist":            50,
+"min_moon_dist":            50,
 ```
 Min required Moon distance, otherwise skipped / degrees
+
 ```
-    "min_arc":                  0.05,
+"min_arc":                  0.05,
 ```
 Min required arc length, otherwise skipped / days
+
 ```
-    "##2": "Config for JPL What's Observable? (sbwobs)",
-    "sbwobs_url":   "https://ssd-api.jpl.nasa.gov/sbwobs.api",
+"sbwobs_url":   "https://ssd-api.jpl.nasa.gov/sbwobs.api",
 ```
 URL of JPL SBWobs API
+
 ```
-    "output_sort":  "vmag",
+"output_sort":  "vmag",
 ```
 Sort order for JPL SBWObs
+
 ```
-    "sb_ns":        "u",
+"sb_ns":        "u",
 ```
 JPL SBWObs parameter ```sb-ns```: ```n```=numbered objects, ```u```=unnumbered objects
+
 ```
-    "sb_kind":      "a",
+"sb_kind":      "a",
 ```
-JPL SBWObs parameter ```sb-kind```: ```a```=asteroid, ```c```=comet
+JPL SBWObs parameter ```sb-kind```: ```a```=asteroid, 
+```c```=comet
+
 ```
-    "sb_group":     "neo",
+"sb_group":     "neo",
 ```
 JPL SBWObs parameter ```sb-group```: ```neo```=Near Earth Object, ```pha```=Potentially Hazardous Asteroid
+
 ```
-    "##3": "Config for MPC Dates Of Last Observation Of NEOs (sbwobs)",
-    "lastobs_url":      "https://www.minorplanetcenter.net/iau/NEO/LastObsNEO.txt",
-    "customize_page":   "https://www.minorplanetcenter.net/iau/lists/Customize.html",
-    "customize_url":    "https://cgi.minorplanetcenter.net/cgi-bin/customize.cgi",
+"lastobs_url":      "https://www.minorplanetcenter.net/iau/NEO/LastObsNEO.txt",
+"customize_page":   "https://www.minorplanetcenter.net/iau/lists/Customize.html",
+"customize_url":    "https://cgi.minorplanetcenter.net/cgi-bin/customize.cgi",
 ```
 URLs of MPC last observation lists
+
 ```
-    "##3a": "Automatically calculated from location in neo-obs-planner and sbwobs",
-    "min_dec":      -90,
+"min_dec":      -90,
 ```
 Min DEC value, automatically calculated from location
+
 ```
-    "max_dec":      40,
+"max_dec":      40,
 ```
 Max DEC value, automatically calculated from location
-```
 
-    "max_last_obs":     14,
+```
+"max_last_obs":     14,
 ```
 Max time for object not seen in SBWObs filtering / days  
 (Redundant with ```max_notseen```?)
+
 ```
-    "min_uncertainty":  3,
+"min_uncertainty":  3,
 ```
 Min uncertainty from MPC last observation lists in SBWObs filtering
-```
-    "##4": "Config for Previous NEO Confirmation Page Objects",
-    "prev_neocp_url":   "https://www.minorplanetcenter.net/iau/NEO/ToConfirm_PrevDes.html",
-    "mpc_url":          "https://www.minorplanetcenter.net"
-```
-URLs of MPC previous NEOCP objects and MPC
-```
-}
-```
 
-FIXME: add new config stuff
+```
+"prev_neocp_url":   "https://www.minorplanetcenter.net/iau/NEO/ToConfirm_PrevDes.html",
+"mpc_url":          "https://www.minorplanetcenter.net"
+```
+URLs of MPC previous NEOCP objects and MPC base URL
+
+```
+"find_orb_dir":     "find_orb",
+```
+Directory containing find_orb exe and support files
+
+```
+"fo_exe":           "fo64.exe",
+```
+Command line FO exe
+
+```
+"fo_mpc80":         "data.mpc80",
+```
+Input data files with observations in MPC 80 columns format
+
+```
+"fo_json":          "ephemeri.json",
+```
+Output data file containing ephemeris in JSON format
+
+```
+"fo_txt":           "ephem.txt",
+```
+Output data files containing ephemeris in text format
+
+```
+"fo_debug":         "debug.txt",
+```
+Output file with debug messages
+
+```
+"fo_args":          [ "-E", "3,5,10,27,28,29,35,36" ],
+```
+Command line args for FO, see https://www.projectpluto.com/fo_usage.htm
+
+- 3 = Alt/az output
+- 5 = Apparent angular motion (total motion and PA)
+- 10 = Round to nearest step
+- 27 = Show moon's altitude
+- 28 = Show moon's azimuth
+- 35 = SNR
+- 36 = Exposure length
