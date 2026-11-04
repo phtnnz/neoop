@@ -21,22 +21,22 @@ options:
   -l, --location LOCATION
                         coordinates, named location or MPC station code, default M49
   -f, --file FILE       read list of objects from file
-  -s, --start START     start time (UTC) (default naut. dusk)
-  -e, --end END         end time (UTC) (default naut. dawn)
-  -o, --output OUTPUT   write CSV to OUTPUT file
-  -C, --csv             use CSV output format
+  -s, --start START     start time (UTC) (default nautical dusk)
+  -e, --end END         end time (UTC) (default nautical dawn)
+  -o, --output OUTPUT   write CSV observation plan to OUTPUT file
+  -C, --csv             output CSV observation plan/exposure list
   -P, --plot            create altitude and sky plot with objects
   --clear               clear MPC cache
   -M, --mag-limit MAG_LIMIT
-                        override *mag_limits from config (see below)
+                        override *mag_limits from config (default see below)
   --neocp-mag-limit NEOCP_MAG_LIMIT
-                        override neocp_mag_limit from config (20.5)
+                        override neocp_mag_limit from config (default 20.5)
   --sbwobs-mag-limit SBWOBS_MAG_LIMIT
-                        override sbwobs_mag_limit from config (19.5)
+                        override sbwobs_mag_limit from config (default 19.5)
   -m, --min-alt MIN_ALT
-                        override min_alt/elev_min from config
-  --neocp               observable NEOCP objects
-  --sbwobs              observable objects from JPL WOBS service
+                        override min_alt from config (default 26)
+  --neocp               plan observable NEOCP objects
+  --sbwobs              plan observable objects from JPL WOBS service
   --asteroids           sbwobs: get asteroids default=a
   --neo                 sbwobs: get NEOs default=neo
   --pha                 sbwobs: get PHAs
