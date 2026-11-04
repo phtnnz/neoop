@@ -5,7 +5,7 @@
 ```
 usage: neo-obs-planner [-h] [-v] [--verbose-ephem] [-d] [-l LOCATION] [-f FILE] [-s START] [-e END] [-o OUTPUT] [-C] [-P] [--clear] [-M MAG_LIMIT]
                        [--neocp-mag-limit NEOCP_MAG_LIMIT] [--sbwobs-mag-limit SBWOBS_MAG_LIMIT] [-m MIN_ALT] [--neocp] [--sbwobs] [--asteroids] [--neo] [--pha]
-                       [--comets] [-p PREFIX] [--force FORCE] [--find-orb]
+                       [--comets] [-p PREFIX] [--force FORCE] [--skip SKIP] [--find-orb]
                        [object ...]
 
 NEOCP/NEO/comet observation planner
@@ -41,11 +41,12 @@ options:
   --neo                 sbwobs: get NEOs default=neo
   --pha                 sbwobs: get PHAs
   --comets              sbwobs: get comets (overrides asteroids options)
-  -p, --prefix PREFIX   prefix for planner data, default 20260907
+  -p, --prefix PREFIX   prefix for planner data, default 20261104
   --force FORCE         skip checks for FORCE objects, include in observation plan
+  --skip SKIP           don't observe SKIP objects, removed from observation plan
   --find-orb            compute ephemeris for mid exposure using find_orb
 
-Version 2.4 / 2026-09-01 / Martin Junius
+Version 2.5 / 2026-11-04 / Martin Junius
 ```
 
 Retrieve lists and ephemerides for upcoming night

@@ -42,8 +42,10 @@
 #       Use mid track exposure time, added to output
 # Version 2.4 / 2026-09-01
 #       Added --find-orb option
+# Version 2.5 / 2026-11-04
+#       Added --skip option
 
-VERSION     = "2.4 / 2026-09-01"
+VERSION     = "2.5 / 2026-11-04"
 AUTHOR      = "Martin Junius"
 NAME        = "neo-obs-planner"
 DESCRIPTION = "NEOCP/NEO/comet observation planner"
@@ -332,6 +334,7 @@ def main():
  
     arg.add_argument("-p", "--prefix", help=f"prefix for planner data, default {neoop.neo.files.prefix}")
     arg.add_argument("--force", help=f"skip checks for FORCE objects, include in observation plan")
+    arg.add_argument("--skip", help=f"don't observe SKIP objects, removed from observation plan")
     arg.add_argument("--find-orb", action="store_true", help=f"compute ephemeris for mid exposure using find_orb")
 
     arg.add_argument("object", nargs="*", help="object name")
@@ -383,7 +386,9 @@ def main():
     forced_objs = list()
     if args.force:
         forced_objs = args.force.split(",")
-
+    skipped_objs = list()
+    if args.skip:
+        skipped_objs = args.skip.split(",")
 
     edata_list = EphemDataList()
 
@@ -430,8 +435,11 @@ def main():
     edata_list.add_exposure()
     ic(edata_list)
 
-    # Rebuild list: process only objects with ephemeris and exposure data
-    edata_list = EphemDataList([ edata for edata in edata_list if edata.ephem and edata.exposure ])
+    # Rebuild list: process only objects with ephemeris, exposure data and not skipped
+    edata: EphemData
+    verbose("skipped objects:", ", ".join(skipped_objs))
+    edata_list = EphemDataList([ edata for edata in edata_list 
+                                 if edata.ephem and edata.exposure and not edata.obj in skipped_objs ])
 
     # Process objects
     edata_list.add_ephem_times()
@@ -441,7 +449,7 @@ def main():
     #                                    "Motion", "PA", "Az", "Alt", "Moon_dist", "Moon_alt"])
     #     verbose(edata.exposure)
     #     verbose(edata.times)
-    verbose.print_lines(edata_list)
+    # verbose.print_lines(edata_list)
 
     edata_list.sort_by_time()
     verbose(f"sorted object sequence: {edata_list.objects_str()}")
