@@ -43,7 +43,7 @@ options:
   --comets              sbwobs: get comets (overrides asteroids options)
   -p, --prefix PREFIX   prefix for planner data, default 20261104
   --force FORCE         skip checks for FORCE objects, include in observation plan
-  --skip SKIP           don't observe SKIP objects, removed from observation plan
+  --skip SKIP           don't observe SKIP objects, remove from observation plan
   --find-orb            compute ephemeris for mid exposure using find_orb
 
 Version 2.5 / 2026-11-04 / Martin Junius

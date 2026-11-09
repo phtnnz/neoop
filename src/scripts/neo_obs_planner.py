@@ -334,7 +334,7 @@ def main():
  
     arg.add_argument("-p", "--prefix", help=f"prefix for planner data, default {neoop.neo.files.prefix}")
     arg.add_argument("--force", help=f"skip checks for FORCE objects, include in observation plan")
-    arg.add_argument("--skip", help=f"don't observe SKIP objects, removed from observation plan")
+    arg.add_argument("--skip", help=f"don't observe SKIP objects, remove from observation plan")
     arg.add_argument("--find-orb", action="store_true", help=f"compute ephemeris for mid exposure using find_orb")
 
     arg.add_argument("object", nargs="*", help="object name")
